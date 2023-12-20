@@ -1,0 +1,500 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/plugins/multiselect/css/multi-select.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card card-user">
+                    <div class="card-header">
+                        <h2 class="card-title text-info font-weight-bold mb-4">EMPRESA: {{ empresa.nombre }}</h2>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-body" style="background: #fdfdfd">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <!-- Tabs with icons -->
+                                    <div class="nav-wrapper">
+                                        <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text"
+                                            role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-1" role="tab"
+                                                   aria-controls="tabs-icons-text-1" aria-selected="true"><i
+                                                            class="ni ni-cloud-upload-96 mr-2"></i>Generales</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-2" role="tab"
+                                                   aria-controls="tabs-icons-text-2" aria-selected="false"><i
+                                                            class="fa fa-user mr-2 text-blue"></i>Conceptos
+                                                    estatales</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-3" role="tab"
+                                                   aria-controls="tabs-icons-text-3" aria-selected="false"><i
+                                                            class="fa fa-user-check mr-2 text-blue"></i>Servicios de
+                                                    cuentas propistas</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-4-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-4" role="tab"
+                                                   aria-controls="tabs-icons-text-4" aria-selected="false"><i
+                                                            class="fa fa-file-archive mr-2 text-blue"></i>Contrataciones</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card shadow">
+                                        <div class="card-body" style="background: #fdfdfd">
+                                            <div class="tab-content" id="myTabContent">
+                                                <div class="tab-pane fade show active" id="tabs-icons-text-1"
+                                                     role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNombre">Nombre</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el nombre" id="editNombre"
+                                                                       name="editNombre" value="{{ empresa.nombre }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editTipoEmpresa">Tipo de Empresa</label>
+                                                                <select class="form-control" id="editTipoEmpresa"
+                                                                        name="editTipoEmpresa" disabled>
+                                                                    <option value="{{ empresa.tipoEmpresa.id }}">{{ empresa.tipoEmpresa.nombre }}</option>
+                                                                    {% for tipo in tiposEmpresas %}
+                                                                        <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNIT">NIT</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el NIT"
+                                                                       id="editNIT"
+                                                                       name="editNIT" value="{{ empresa.nit }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNoAutorizada">No. Resolución
+                                                                    autorizada</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el no."
+                                                                       id="editNoAutorizada"
+                                                                       name="editNoAutorizada"
+                                                                       value="{{ empresa.noAutorizadaResolucion }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editFechaAutorizada">Fecha
+                                                                    autorizada</label><input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Seleccione"
+                                                                        min="2020-01-01"
+                                                                        step="1"
+                                                                        id="editFechaAutorizada"
+                                                                        name="editFechaAutorizada"
+                                                                        value="{{ empresa.fechaNoAutorizadaResolucion|date('d-m-Y') }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editCargoNoAutorizada">Autorizada
+                                                                    por</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el cargo"
+                                                                       id="editCargoNoAutorizada"
+                                                                       name="editCargoNoAutorizada"
+                                                                       value="{{ empresa.cargoNoAutorizadaResolucion }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNoConstituida">No. Resolución
+                                                                    constituida</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el no."
+                                                                       id="editNoConstituida"
+                                                                       name="editNoConstituida"
+                                                                       value="{{ empresa.noConstituidaResolucion }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editFechaConstituida">Fecha de
+                                                                    constituida</label><input
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Seleccione"
+                                                                        min="2020-01-01"
+                                                                        step="1"
+                                                                        id="editFechaConstituida"
+                                                                        name="editFechaConstituida"
+                                                                        value="{{ empresa.fechaNoConstituidaResolucion|date('d-m-Y') }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editCargoNoConstituida">Constituida
+                                                                    por</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el cargo"
+                                                                       id="editCargoNoConstituida"
+                                                                       name="editCargoNoConstituida"
+                                                                       value="{{ empresa.cargoNoConstituidaResolucion }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNoCuentaCUC">No. cuenta CUC</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el no. cuenta CUC"
+                                                                       id="editNoCuentaCUC"
+                                                                       name="editNoCuentaCUC"
+                                                                       value="{{ empresa.noCuentaCUC }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editBancoCUC">Banco CUC</label>
+                                                                <select class="form-control" id="editBancoCUC"
+                                                                        name="editBancoCUC" disabled>
+                                                                    {% if empresa.bancoCUC %}
+                                                                        <option value="{{ empresa.bancoCUC.id }}">{{ empresa.bancoCUC.nombre }}</option>
+                                                                    {% else %}
+                                                                        <option value="0"></option>
+                                                                    {% endif %}
+                                                                    {% for banco in  bancos %}
+                                                                        <option value="{{ banco.id }}">{{ banco.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNoSucursalCUC">No. Sucursal Banco
+                                                                    CUC</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el no. sucursal"
+                                                                       id="editNoSucursalCUC"
+                                                                       name="editNoSucursalCUC"
+                                                                       value="{{ empresa.noSucursalCUC }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNoCuentaCUP">No. cuenta CUP</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el no. cuenta CUP"
+                                                                       id="editNoCuentaCUP"
+                                                                       name="editNoCuentaCUP"
+                                                                       value="{{ empresa.noCuentaCUP }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editBancoCUP">Banco CUP</label>
+                                                                <select class="form-control" id="editBancoCUP"
+                                                                        name="editBancoCUP" disabled>
+                                                                    {% if empresa.bancoCUP %}
+                                                                        <option value="{{ empresa.bancoCUP.id }}">{{ empresa.bancoCUP.nombre }}</option>
+                                                                    {% else %}
+                                                                        <option value="0"></option>
+                                                                    {% endif %}
+                                                                    {% for banco in  bancos %}
+                                                                        <option value="{{ banco.id }}">{{ banco.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNoSucursalCUP">No. Sucursal Banco
+                                                                    CUP</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el no. sucursal"
+                                                                       id="editNoSucursalCUP"
+                                                                       name="editNoSucursalCUP"
+                                                                       value="{{ empresa.noSucursalCUP }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-6 col-md-6 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNombreRepresentante">Nombre
+                                                                    representante</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el nombre"
+                                                                       id="editNombreRepresentante"
+                                                                       name="editNombreRepresentante"
+                                                                       value="{{ empresa.nombreRepresentante }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editCargoRepresentante">Cargo
+                                                                    representante</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el cargo"
+                                                                       id="editCargoRepresentante"
+                                                                       name="editCargoRepresentante"
+                                                                       value="{{ empresa.cargoRepresentante }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editDireccion">Dirección</label>
+                                                                <textarea class="form-control textarea"
+                                                                          id="editDireccion" name="editDireccion"
+                                                                          placeholder="Teclee la dirección">{{ empresa.direccion }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-2-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label "
+                                                                               for="multi-cargos"><strong>Conceptos:</strong></label>
+                                                                        <select multiple="multiple" id="multi-cargos"
+                                                                                name="multi-cargos"
+                                                                                class="form-control" disabled>
+                                                                            {% for cargo in cargos %}
+                                                                                {% if cargo.isServicio != 1 %}
+                                                                                    {% if not (cargo in empresa.empresaCargos) %}
+                                                                                        <option  value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% else %}
+                                                                                        <option class="misCargos"
+                                                                                                value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-3-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label "
+                                                                               for="multi-servicios"><strong>Servicios:</strong></label>
+                                                                        <select multiple="multiple" id="multi-servicios"
+                                                                                name="multi-servicios"
+                                                                                class="form-control" disabled>
+                                                                            {% for cargo in cargos %}
+                                                                                {% if cargo.isServicio == 1 %}
+                                                                                    {% if not (cargo in empresa.empresaServicios) %}
+                                                                                        <option  value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% else %}
+                                                                                        <option class="misServicios"
+                                                                                                value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-4" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-3-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="table-responsive">
+                                                                    <table class="table align-items-center table-flush"
+                                                                           id="dataProyectos">
+                                                                        <thead style="background: #1c345d;color: white">
+                                                                        <tr>
+                                                                            <th scope="col">Título</th>
+                                                                            <th scope="col">Director general</th>
+                                                                            <th scope="col">Productor general</th>
+                                                                            <th scope="col" class="text-center">No. Contrato</th>
+                                                                            <th scope="col">Concepto</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody class="list">
+                                                                        {% for proyecto in empresa.proyectosEmpresasCargos() %}
+                                                                            <tr data-id="{{ proyecto.proyecto.id }}">
+                                                                                <td>{{ proyecto.proyecto.titulo }}</td>
+                                                                                <td>{{ proyecto.proyecto.nombresDirectorGeneral }}</td>
+                                                                                <td>{{ proyecto.proyecto.nombresProductorGeneral }}</td>
+                                                                                <td class="text-center">{{ proyecto.noContrato }}</td>
+                                                                                <td>{{ proyecto.cargo.nombre }}</td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="button" class="btn btn-secondary btn-round" id="btnCancelar"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Salir">Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('easyadmin/plugins/multiselect/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ asset('easyadmin/plugins/quicksearch/src/jquery.quicksearch.js') }}"></script>
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function(){
+                {% if not (is_granted("ROLE_EMPRESA") or is_granted("ROLE_SUPERUSUARIO")) %}
+                      window.location.href = "{{ path('login') }}";
+                {% endif %}
+            })();
+
+            //--------- abandonar el formulario -----------------
+            $('#btnCancelar').on('click', function () {
+                var enlace = "{{ path('cancelarEditEmpresa', {id:'id'}) }}";
+                var ruta = enlace.replace('id','{{ empresa.id }}');
+                window.location.href = ruta;
+            });
+
+            $('#dataProyectos').DataTable({
+                "lengthChange": false,
+                "lengthMenu": [[10], [10]]
+            });
+
+            $('#multi-cargos, #multi-servicios').multiSelect({
+                selectableHeader: "<input type='text' class='search-input input-lg' autocomplete='off' placeholder='Buscar'>",
+                selectionHeader: "<input type='text' class='search-input input-lg' autocomplete='off' placeholder='Buscar'>",
+                afterInit: function(ms){
+                    var that = this,
+                        $selectableSearch = that.$selectableUl.prev(),
+                        $selectionSearch = that.$selectionUl.prev(),
+                        selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                        selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+                    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                        .on('keydown', function(e){
+                            if (e.which === 40){
+                                that.$selectableUl.focus();
+                                return false;
+                            }
+                        });
+
+                    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                        .on('keydown', function(e){
+                            if (e.which == 40){
+                                that.$selectionUl.focus();
+                                return false;
+                            }
+                        });
+                },
+                afterSelect: function(){
+                    this.qs1.cache();
+                    this.qs2.cache();
+                },
+                afterDeselect: function(){
+                    this.qs1.cache();
+                    this.qs2.cache();
+                }
+            });
+
+            $('.ms-list .ms-elem-selectable.misCargos').each(function(){
+                $(this).css('display', 'none');
+                $(this).addClass('ms-hover');
+                $(this).addClass('ms-selected');
+
+            });
+
+            $('.ms-list .ms-elem-selection.misCargos').each(function(){
+                $(this).addClass('ms-selected');
+                $(this).css('display', '');
+            });
+
+            $('.ms-list .ms-elem-selectable.misServicios').each(function(){
+                $(this).css('display', 'none');
+                $(this).addClass('ms-hover');
+                $(this).addClass('ms-selected');
+
+            });
+
+            $('.ms-list .ms-elem-selection.misServicios').each(function(){
+                $(this).addClass('ms-selected');
+                $(this).css('display', '');
+            });
+
+        });
+    </script>
+{% endblock %}
+

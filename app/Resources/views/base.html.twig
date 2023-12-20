@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% block title %}RPROYECTOS 1.0{% endblock %}</title>
+    {% block stylesheets %}
+        <!-- Fonts -->
+        <link href="{{ asset('easyadmin/plugins/font-awesome/css/font-awesome.css') }}" rel="stylesheet"/>
+        <!-- Icons -->
+        <link href="{{ asset('assets/vendor/nucleo/css/nucleo.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('assets/vendor/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet"
+              type="text/css">
+        <!-- BEGIN THEME STYLES -->
+        <link href="{{ asset('easyadmin/global/css/components.css') }}" rel="stylesheet">
+        <link href="{{ asset('easyadmin/global/css/plugins.css') }}" rel="stylesheet">
+        <link href="{{ asset('easyadmin/tema/layout/css/layout.css') }}" rel="stylesheet">
+        <!-- Argon CSS -->
+        <link href="{{ asset('assets/css/argon.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ asset('easyadmin/plugins/Alertify/css/alertify.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('easyadmin/plugins/Alertify/css/themes/default.css') }}" rel="stylesheet"/>
+        <link href="{{ asset('easyadmin/global/css/estilos.css') }}" rel="stylesheet">
+    {% endblock %}
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}"/>
+</head>
+
+<body>
+{% block nav %}
+    <!-- Sidenav -->
+    <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+        <div class="scrollbar-inner">
+            <!-- Brand -->
+            <div class="sidenav-header  align-items-center">
+                <a class="navbar-brand" href="{{ path('inicio') }}">
+                    <img style="width: 150px" src="{{ asset('images/logo.png') }}" class="navbar-brand-img" alt="...">
+                </a>
+            </div>
+            <div class="navbar-inner">
+                <!-- Collapse -->
+                <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+                    <!-- Nav items -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ path('inicio') }}">
+                                <i class="fas fa-home text-primary"></i>
+                                <span class="nav-link-text">Inicio</span>
+                            </a>
+                        </li>
+                        {% for nivel in app.user.nivelAccesos() if nivel == 'EMPRESA' %}
+                            {% if (is_granted("ROLE_EMPRESA")) %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarEmpresas') }}">
+                                        <i class="ni ni-single-02 text-primary"></i>
+                                        <span class="nav-link-text">Empresas</span>
+                                    </a>
+
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% for nivel in app.user.nivelAccesos() if nivel == 'PERSONA' %}
+                            {% if (is_granted("ROLE_PERSONA")) %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarPersonas') }}">
+                                        <i class="ni ni-folder-17 text-primary"></i>
+                                        <span class="nav-link-text">Personas</span>
+                                    </a>
+
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% for nivel in app.user.nivelAccesos() if nivel == 'PROYECTO' %}
+                            {% if (is_granted("ROLE_PROYECTO")) %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarProyectos') }}">
+                                        <i class="ni ni-tv-2 text-orange"></i>
+                                        <span class="nav-link-text">Proyectos</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% for nivel in app.user.nivelAccesos() if nivel == 'ADMINISTRACION' %}
+                            {% if (is_granted("ROLE_ADMINISTRADOR")) %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarTipos') }}">
+                                        <i class="ni ni-settings text-yellow"></i>
+                                        <span class="nav-link-text">Categorias de proyectos</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarFormatos') }}">
+                                        <i class="ni ni-settings text-red"></i>
+                                        <span class="nav-link-text">Formatos de proyectos</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarProfesiones') }}">
+                                        <i class="ni ni-settings text-default"></i>
+                                        <span class="nav-link-text">Profesiones</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarTiposContratos') }}">
+                                        <i class="ni ni-settings text-green"></i>
+                                        <span class="nav-link-text">Tipos de contratos</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarCargos') }}">
+                                        <i class="ni ni-settings text-default"></i>
+                                        <span class="nav-link-text">Conceptos</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarBancos') }}">
+                                        <i class="ni ni-settings text-red"></i>
+                                        <span class="nav-link-text">Bancos</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('gestionarUsuarios') }}">
+                                        <i class="ni ni-settings text-warning"></i>
+                                        <span class="nav-link-text">Usuarios</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <!-- Divider -->
+                    <hr class="my-4">
+                    <!-- Heading -->
+                    <h6 class="navbar-heading p-0 text-muted">
+                        <span class="docs-normal">Documentación</span>
+                    </h6>
+                    <!-- Navigation -->
+                    <ul class="navbar-nav mb-md-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="ni ni-books"></i>
+                                <span class="nav-link-text">Ayuda</span>
+                            </a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="main-content" id="panel">
+        <!-- Topnav -->
+        <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Navbar links -->
+                    <ul class="navbar-nav align-items-center  ml-md-auto ">
+                        <li class="nav-item d-xl-none">
+                            <!-- Sidenav toggler -->
+                            <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin"
+                                 data-target="#sidenav-main">
+                                <div class="sidenav-toggler-inner">
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                    <i class="sidenav-toggler-line"></i>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item d-sm-none">
+                            <a class="nav-link" href="#" data-action="search-show" data-target="#navbar-search-main">
+                                <i class="ni ni-zoom-split-in"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                <i class="ni ni-bell-55 text-yellow"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">
+                                <!-- Dropdown header -->
+                                <div class="px-3 py-3">
+                                    <h6 class="text-sm text-muted m-0">Usted tiene <strong
+                                                class="text-primary">1</strong>
+                                        notificación.</h6>
+                                </div>
+                                <!-- List group -->
+                                <div class="list-group list-group-flush">
+                                    <a href="#!" class="list-group-item list-group-item-action">
+                                        <div class="row align-items-center">
+                                            <div class="col ml--2">
+                                                <p class="text-sm mb-0">5 Proyectos están próximos a terminar</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false">
+                                <div class="media align-items-center">
+                                    <i class="ni ni-single-02"></i>
+                                    <div class="media-body  ml-2  d-none d-lg-block">
+                                        <span class="mb-0 text-sm  font-weight-bold">{{ app.user.nombreCompleto() }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu  dropdown-menu-right ">
+                                <a href="{{ path('passwordForm') }}" class="dropdown-item">
+                                    <i class="ni ni-settings-gear-65"></i>
+                                    <span>Cambiar contraseña</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ path('login') }}" class="dropdown-item">
+                                    <i class="ni ni-user-run"></i>
+                                    <span>Salir</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% block body %}
+            {% block footer %}
+                <footer class="footer pt-0">
+                    <div class="row align-items-center justify-content-lg-between">
+                        <div class="col-lg-12">
+                            <div class="copyright text-center  text-lg-center  text-muted">
+                                &copy; 2020 <a href="#" class="font-weight-bold ml-1" target="_blank">Oficina de
+                                    Producción Ejecutiva</a>
+                                <img style="width: 50px" src="{{ asset('images/logoRTVazul.png') }}"
+                                     class="navbar-brand-img" alt="...">
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            {% endblock %}
+        {% endblock %}
+        {% block javascripts %}
+            <!-- Argon Scripts -->
+            <!-- Core -->
+            <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
+            <script src="{{ asset('easyadmin/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+            <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+            <script src="{{ asset('assets/vendor/js-cookie/js.cookie.js') }}"></script>
+            <script src="{{ asset('assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js') }}"></script>
+            <script src="{{ asset('assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js') }}"></script>
+            <!-- Optional JS -->
+            <!-- Argon JS -->
+            {#<script src="../assets/js/argon.js?v=1.2.0"></script>#}
+            <script src="{{ asset('easyadmin/plugins/Alertify/alertify.js') }}"></script>
+            <script src="{{ asset('easyadmin/global/js/moment.js') }}"></script>
+            <script src="{{ asset('easyadmin/global/js/formatoTipos.js') }}"></script>
+            <script src="{{ asset('easyadmin/global/js/functionsAll.js') }}"></script>
+        {% endblock %}
+    </div>
+
+{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,587 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card card-user">
+                    <div class="card-header">
+                        <h2 class="card-title text-info font-weight-bold mb-4">Nuevo Reporte</h2>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="row" >
+                                <div class="col-md-4 col-10">
+                                    <div class="form-group">
+                                        <label for="addFechaInicio">Fecha</label><input type="text"
+                                                                 class="form-control"
+                                                                 placeholder="Seleccione"
+                                                                 min="2020-01-01"
+                                                                 step="1"
+                                                                 id="addFecha"
+                                                                 name="addFecha">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group">
+                                        <label for="addTotalEmisiones">Total de programas</label><input
+                                                type="number" class="form-control"
+                                                placeholder="Teclee la cantidad"
+                                                id="addTotalEmisiones" name="addTotalEmisiones">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="table-responsive">
+                                        <table class="table align-items-center table-flush display responsive nowrap"
+                                               id="dataPersonas" width="100%" cellspacing="0">
+                                            <thead style="background: #1c345d;color: white">
+                                            <tr>
+                                                <th scope="col" class="hidden">ID</th>
+                                                <th scope="col" class="text-center">No.</th>
+                                                <th scope="col">Nombres</th>
+                                                <th scope="col">Concepto</th>
+                                                <th scope="col">Por reportar</th>
+                                                <th scope="col" class="text-center">
+                                                    Acciones
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="list">
+                                            {% for proyecto in proyectoPersonas %}
+                                                <tr data-id="{{ proyecto.noContrato }}">
+                                                    <td class="hidden">{{ proyecto.id }}</td>
+                                                    <td class="text-center">{{ proyecto.noContrato }}</td>
+                                                    <td>{{ proyecto.persona.nombreCompleto }}</td>
+                                                    <td>{{ proyecto.cargo.nombre }}</td>
+                                                    <td>{{ proyecto.presupuestoRestante }}</td>
+                                                    <td class="text-center">
+                                                        <button type="button"
+                                                           class="btn btn-sm btn-info btn-icon-only rounded-circle addPersona"
+                                                           data-toggle="tooltip"
+                                                           data-placement="left"
+                                                           title="Agregar reporte">
+                                                            <span class="btn-inner--icon"><i
+                                                                        class="fas fa-plus"></i></span></button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="table-responsive">
+                                        <table class="table align-items-center table-flush display responsive nowrap"
+                                               id="dataReportes" width="100%" cellspacing="0">
+                                            <thead style="background: #1c345d;color: white">
+                                            <tr>
+                                                <th scope="col"
+                                                    class="hidden">ID
+                                                </th>
+                                                <th scope="col"
+                                                    class="text-center">No.
+                                                </th>
+                                                <th scope="col">Nombres</th>
+                                                <th scope="col">Concepto</th>
+                                                <th scope="col" class="text-center">Valor</th>
+                                                <th scope="col"
+                                                    class="text-center">Programas
+                                                </th>
+                                                <th scope="col"
+                                                    class="hidden">Ingreso
+                                                </th>
+                                                <th scope="col"
+                                                    class="hidden">Porciento
+                                                </th>
+                                                <th scope="col"
+                                                    class="text-center">
+                                                    A Cobrar
+                                                </th>
+                                                <th scope="col"
+                                                    class="text-center">Acciones
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="list"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                    <button type="button" class="btn btn-primary btn-round" id="btnGuardar"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Guardar el proyecto">Aceptar
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-round" id="btnCancelar"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Salir">Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ include('Reportes/modalAddReporte.html.twig') }}
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- BEGIN GRAFICOS HIGHSTOCK LEVEL PLUGINS -->
+    <script src="{{ asset('easyadmin/plugins/highstock/code/highstock.js') }}"></script>
+    <!-- END  GRAFICOS HIGHSTOCK LEVEL PLUGINS -->
+    <script src="{{ asset('easyadmin/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('easyadmin/tema/pages/js/components-pickers.js') }}"></script>
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function(){
+                {% if not (is_granted("ROLE_REPORTE") or is_granted("ROLE_SUPERUSUARIO")) %}
+                window.location.href = "{{ path('login') }}";
+                {% else %}
+                {% for nivel in app.user.nivelAccesos() if nivel == 'REPORTE' %}
+                {% else %}
+                window.location.href = "{{ path('login') }}";
+                {% endfor %}
+                {% endif %}
+            })();
+
+            var tableNombrePersona = $('#dataPersonas').DataTable({
+                columns: [
+                    {class: "hidden"},
+                    {class: "text-center"},
+                    {class: "text-left"},
+                    {class: "text-left"},
+                    {class: "text-center"},
+                    {
+                        defaultContent: '<button class="btn btn-sm btn-info btn-icon-only rounded-circle addPersona" type="button" data-toggle="tooltip" data-placement="top" title="Agregar reporte"><span class="btn-inner--icon"><i class="fas fa-plus"></i></span></button>',
+                        class: "text-center"
+                    }
+                ],
+                "lengthChange": false,
+                "scrollY":        "400px",
+                "scrollCollapse": true,
+                "paging":         false,
+                "responsive": true
+            });
+
+            var tableNombreReporte = $('#dataReportes').DataTable({
+                columns: [
+                    {class: "hidden"},
+                    {class: "text-center"},
+                    {class: "text-left"},
+                    {class: "text-left"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "hidden"},
+                    {class: "hidden"},
+                    {class: "text-center"},
+                    {
+                        defaultContent: '<button class="btn btn-sm btn-danger btn-icon-only rounded-circle borrarReporte" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><span class="btn-inner--icon"><i class="fas fa-trash"></i></span></button>',
+                        class: "text-center"
+                    }
+                ],
+                "lengthChange": false,
+                "scrollY":        "400px",
+                "scrollCollapse": true,
+                "paging":         false,
+                "responsive": true
+            });
+
+            //Declaración de variables
+            var hoy = '{{ "now"|date('d-m-Y') }}';
+            $("#addFecha").datepicker({
+                firstDay: 1,
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: hoy
+            });
+
+            //--------- abandonar el formulario -----------------
+            $('#btnCancelar').on('click', function () {
+                var enlace = "{{ path('gestionarReportes', {idProyecto:'id'}) }}";
+                window.location.href = enlace.replace('id', {{ proyecto.id }});
+            });
+
+            var valorPorgrama = 0;
+            var ingreso;
+            var porciento;
+            var isPA = 0;
+            var aCobrar = 0;
+            var noContratoSeleccionado;
+            var row;
+            var reportados = [];
+
+            $('#dataPersonas tbody').on('click', '.addPersona', function () {
+
+                if ($("#addTotalEmisiones").val() === '') {
+                    alertify.alert('<strong>Debe definir primero el total de emisiones.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addTotalEmisiones").val() === '0') {
+                    alertify.alert('<strong>El total de emisiones debe ser mayor que 0.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                row = $(this).parents('tr');
+
+                noContratoSeleccionado = row.data('id');
+
+                {% for proyecto in proyectoPersonas %}
+                var noContrato = '{{ proyecto.noContrato }}';
+
+                if (noContrato == noContratoSeleccionado) {
+                    valorPorgrama = parseFloat({{ proyecto.valorPrograma }});
+                    isPA = '{{ proyecto.isPA }}';
+                }
+                {% endfor %}
+
+                $('#cantEmision').val('');
+                $('#modalAddReporte').modal('show');
+
+            });
+
+            //Formulario Adicionar cantidad de programas
+            $('#btnAddPersona').on('click', function () {
+                $('#modalAddReporte').modal('hide');
+
+
+                var programasRestantes = parseInt({{ programasRestantes }});
+
+                //Validaciones
+                if ($("#cantEmision").val() === '') {
+                    alertify.alert('<strong>Para registrar un reporte la cantidad de programas no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if (parseInt($("#cantEmision").val()) === 0) {
+                    alertify.alert('<strong>Para registrar un reporte la cantidad de programas debe ser mayor que 0.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if (parseInt($("#cantEmision").val()) > parseInt($("#addTotalEmisiones").val())) {
+                    alertify.alert('<strong>La cantidad de programas no puede ser mayor que el total declarado.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                var msg = 'Solamente quedan ' + programasRestantes + ' programas por reportar.';
+
+                if (parseInt($("#addTotalEmisiones").val()) > programasRestantes) {
+                    alertify.alert('<strong>Solamente quedan ' + msg + '</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if (valorPorgrama !== 0) {
+                    if (isPA ==='1') {
+                        ingreso = valorPorgrama * parseInt($("#cantEmision").val());
+                        porciento = ingreso * 0.05;
+                        aCobrar = ingreso - porciento;
+                    }else {
+                        aCobrar = valorPorgrama * parseInt($("#cantEmision").val());
+                        ingreso = aCobrar;
+                        porciento = 0;
+                    }
+                }
+
+                //Capturar los datos de la persona seleccionada
+                $("#dataPersonas tbody tr").each(function (index) {
+                    var filaID, filaNoContrato, filaNombres, filaConcepto, filaPrespuestoRestante;
+                    $(this).children("td").each(function (index2) {
+                        switch (index2) {
+                            case 0:
+                                filaID = $(this).text();
+                                break;
+                            case 1:
+                                filaNoContrato = $(this).text();
+                                break;
+                            case 2:
+                                filaNombres = $(this).text();
+                                break;
+                            case 3:
+                                filaConcepto = $(this).text();
+                                break;
+                            case 4:
+                                filaPrespuestoRestante = $(this).text();
+                                break;
+                        }
+                    });
+                    if (filaNoContrato == noContratoSeleccionado) {
+                        if(parseFloat(filaPrespuestoRestante) >= ingreso) {
+                            //Adicionar los valores de la fila en la tabla reportes
+                            tableNombreReporte.row.add([
+                                filaID,
+                                filaNoContrato,
+                                filaNombres,
+                                filaConcepto,
+                                Highcharts.numberFormat(valorPorgrama, 2, '.', ','),
+                                parseInt($("#cantEmision").val()),
+                                Highcharts.numberFormat(ingreso, 2, '.', ','),
+                                Highcharts.numberFormat(porciento, 2, '.', ','),
+                                Highcharts.numberFormat(aCobrar, 2, '.', ','),
+                            ]).draw(false);
+                        }else {
+                            alertify.alert('<strong>El presupuesto no tiene esa cantidad disponible.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                                .set('label', 'Aceptar');
+                            return false;
+                        }
+                    }
+                });
+
+                //Borrar el registro seleccionado  de la tabla origen
+                tableNombrePersona
+                    .row( row )
+                    .remove()
+                    .draw();
+
+            });
+
+            $('#dataReportes tbody').on('click', '.borrarReporte', function () {
+
+                row = $(this).parents('tr');
+
+                //De la fila seleccionada guarda la primera columna
+                noContratoSeleccionado = $(this).parents('tr').find('td').eq(1).html();
+
+                //Capturar los datos de la persona seleccionada
+                $("#dataReportes tbody tr").each(function (index) {
+                    var filaID, filaNoContrato, filaNombres, filaConcepto, porReportar;
+                    $(this).children("td").each(function (index2) {
+                        switch (index2) {
+                            case 0:
+                                filaID = $(this).text();
+                            case 1:
+                                filaNoContrato = $(this).text();
+                                break;
+                            case 2:
+                                filaNombres = $(this).text();
+                                break;
+                            case 3:
+                                filaConcepto = $(this).text();
+                                break;
+                            case 4:
+                                porReportar = $(this).text();
+                                break;
+                        }
+                    });
+                    if (filaNoContrato == noContratoSeleccionado) {
+                        //Adicionar los valores de la fila en la tabla personas
+                        tableNombrePersona.row.add([
+                            filaID,
+                            filaNoContrato,
+                            filaNombres,
+                            filaConcepto,
+                            porReportar
+                        ]).draw(false);
+                    }
+                });
+
+                //Borrar el registro seleccionado  de la tabla reportes
+                tableNombreReporte
+                    .row( row )
+                    .remove()
+                    .draw();
+
+            });
+
+            $('#btnGuardar').on('click', function () {
+
+                //Validaciones
+                if (tableNombreReporte.rows().count() === 0) {
+                    alertify.alert('<strong>Debe reportar al menos una persona.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addFecha").val() === '') {
+                    alertify.alert('<strong>La fecha es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addTotalEmisiones").val() === '') {
+                    alertify.alert('<strong>El total de emisiones es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addTotalEmisiones").val() === '0') {
+                    alertify.alert('<strong>El total de emisiones debe ser mayor que 0.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+
+                /*var lastDateRecibido = '{#{{ lastDate|date('Y-m-d') }}#}';*/
+                var lastDateRecibido = '{{ lastDate|date('Y-m-d') == '01-01-0001' ? '' :lastDate|date('Y-m-d') }}';
+                var dateRecibido = Date.parse($("#addFecha").val());
+
+                if (lastDateRecibido !== '0001-01-01') {
+                    var lastDateAntes = Date.parse(lastDateRecibido);
+                    var lastDate = new Date (lastDateAntes);
+                    var actualDate = new Date (dateRecibido);
+                    lastDate = lastDate.toLocaleDateString();
+                    actualDate = actualDate.toLocaleDateString();
+                    if (lastDate > actualDate) {
+                        alertify.alert('<strong>La fecha del reporte debe ser mayor que el anterior.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+                }
+
+                reportados = [];
+                if (tableNombreReporte.rows().count() !== 0) {
+                    $("#dataReportes tbody tr").each(function (index) {
+                        var filaID, filaNoContrato, filaNombres, filaConcepto, filaValorPrograma, filaCantidad, filaIngreso, filaPorciento, filaACobrar;
+                        $(this).children("td").each(function (index2) {
+                            switch (index2) {
+                                case 0:
+                                    filaID = $(this).text();
+                                case 1:
+                                    filaNoContrato = $(this).text();
+                                    break;
+                                case 2:
+                                    filaNombres = $(this).text();
+                                    break;
+                                case 3:
+                                    filaConcepto = $(this).text();
+                                    break;
+                                case 4:
+                                    filaValorPrograma = $(this).text();
+                                    break;
+                                case 5:
+                                    filaCantidad = $(this).text();
+                                    break;
+                                case 6:
+                                    filaIngreso = $(this).text();
+                                    break;
+                                case 7:
+                                    filaPorciento = $(this).text();
+                                    break;
+                                case 8:
+                                    filaACobrar = $(this).text();
+                                    break;
+                            }
+                        });
+                        //Aqui ya tenemos los valores de la fila
+                        reportados.push({
+                            personaCargo: filaID,
+                            noContrato: filaNoContrato,
+                            concepto: filaConcepto,
+                            valorPrograma: filaValorPrograma,
+                            cantidadProgramas: filaCantidad,
+                            ingreso: filaIngreso,
+                            porciento: filaPorciento,
+                            aCobrar: filaACobrar
+                        });
+                    });
+                }
+
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    idProyecto: {{ proyecto.id }},
+                    fecha: $("#addFecha").val(),
+                    totalProgramas: $("#addTotalEmisiones").val(),
+                    reportados: reportados
+                };
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("insertReporte") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+
+                    if (data === 'ok') {
+
+                        alertify.alert('<strong>El reporte ha sido insertado correctamente</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px; color: white">Confirmación</h4>')
+                            .set('label', 'Aceptar')
+                            .set('onok', function () {
+                                var enlace = "{{ path('gestionarReportes', {idProyecto:'id'}) }}";
+                                window.location.href = enlace.replace('id', {{ proyecto.id }});
+                            });
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+
+        });
+    </script>
+{% endblock %}
+

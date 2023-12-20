@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/plugins/bootstrap-datepicker/css/datepicker3.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card card-user">
+                    <div class="card-header">
+                        <h2 class="card-title text-info font-weight-bold mb-4">Reporte
+                            No: {{ reporte.noReporte ~ ' - ' ~ ' No. Contrato Canal: ' ~ proyecto.noContratoCanal ~ ' - ' ~ proyecto.titulo }}</h2>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 col-10">
+                                    <div class="form-group">
+                                        <label for="addFechaInicio">Fecha</label><input type="text"
+                                                                                        class="form-control"
+                                                                                        placeholder="Seleccione"
+                                                                                        min="2020-01-01"
+                                                                                        step="1"
+                                                                                        id="addFecha"
+                                                                                        name="addFecha"
+                                                                                        value="{{ reporte.fechaReporte|date('d-m-Y') }}"
+                                                                                        disabled>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 pr-1">
+                                    <div class="form-group">
+                                        <label for="addTotalEmisiones">Total de programas</label><input
+                                                type="number" class="form-control"
+                                                placeholder="Teclee la cantidad"
+                                                id="addTotalEmisiones" name="addTotalEmisiones"
+                                                value="{{ reporte.cantidadProgramas }}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table class="table align-items-center table-flush"
+                                               id="dataReportes">
+                                            <thead style="background: #1c345d;color: white">
+                                            <tr>
+                                                <th scope="col"
+                                                    class="hidden">ID
+                                                </th>
+                                                <th scope="col"
+                                                    class="text-center">No.
+                                                </th>
+                                                <th scope="col">Nombres</th>
+                                                <th scope="col">Concepto</th>
+                                                <th scope="col" class="text-center">Valor</th>
+                                                <th scope="col"
+                                                    class="text-center">Programas
+                                                </th>
+                                                <th scope="col"
+                                                    class="hidden">Ingreso
+                                                </th>
+                                                <th scope="col"
+                                                    class="hidden">Porciento
+                                                </th>
+                                                <th scope="col"
+                                                    class="text-center">
+                                                    A Cobrar
+                                                </th>
+                                                <th scope="col"
+                                                    class="text-center">Suplementos
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="list">
+                                            {% for persona in personasReportes %}
+                                                <tr data-id="{{ persona.proyectoPersonaCargo.noContrato }}">
+                                                    <td class="hidden">{{ persona.proyectoPersonaCargo.id }}</td>
+                                                    <td class="text-center">{{ persona.proyectoPersonaCargo.noContrato }}</td>
+                                                    <td>{{ persona.proyectoPersonaCargo.persona.nombreCompleto }}</td>
+                                                    <td>{{ persona.proyectoPersonaCargo.cargo.nombre }}</td>
+                                                    <td class="text-center">{{ persona.proyectoPersonaCargo.valorPrograma }}</td>
+                                                    <td class="text-center">{{ persona.cantidadProgramas }}</td>
+                                                    <td class="hidden">{{ persona.ingreso }}</td>
+                                                    <td class="hidden">{{ persona.porciento }}</td>
+                                                    <td class="text-center">{{ persona.presupuestoACobrar }}</td>
+                                                    <td class="text-center">
+                                                        <a href="{{ path('exportarSuplemento',{idPersona:persona.id}) }}"
+                                                           class="btn btn-sm btn-info btn-icon-only rounded-circle exportarSuplemneto"
+                                                           data-toggle="tooltip" data-placement="top"
+                                                           title="Generar Suplemento"><span class="btn-inner--icon"><i
+                                                                        class="fas fa-file-word"></i></span></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="update ml-auto mr-auto">
+                                    <button type="button" class="btn btn-secondary btn-round" id="btnCancelar"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Salir">Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ include('Reportes/modalAddReporte.html.twig') }}
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- BEGIN GRAFICOS HIGHSTOCK LEVEL PLUGINS -->
+    <script src="{{ asset('easyadmin/plugins/highstock/code/highstock.js') }}"></script>
+    <!-- END  GRAFICOS HIGHSTOCK LEVEL PLUGINS -->
+    <script src="{{ asset('easyadmin/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('easyadmin/tema/pages/js/components-pickers.js') }}"></script>
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function(){
+                {% if not (is_granted("ROLE_REPORTE") or is_granted("ROLE_SUPERUSUARIO")) %}
+                window.location.href = "{{ path('login') }}";
+                {% endif %}
+            })();
+
+            $('#dataReportes').DataTable({
+                "lengthChange": false,
+                "scrollY": "400px",
+                "scrollCollapse": true,
+                "paging": false
+            });
+
+            //Declaración de variables
+            var hoy = '{{ "now"|date('d-m-Y') }}';
+            $("#addFecha").datepicker({
+                firstDay: 1,
+                dateFormat: 'dd-mm-yy',
+                changeMonth: true,
+                changeYear: true,
+                maxDate: hoy
+            });
+
+            //--------- abandonar el formulario -----------------
+            $('#btnCancelar').on('click', function () {
+                var enlace = "{{ path('gestionarReportes', {idProyecto:'id'}) }}";
+                window.location.href = enlace.replace('id', {{ reporte.proyecto.id }});
+            });
+
+
+        });
+    </script>
+{% endblock %}
+

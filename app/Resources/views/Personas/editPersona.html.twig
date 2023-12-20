@@ -1,0 +1,702 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/plugins/multiselect/css/multi-select.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card card-user">
+                    <div class="card-header">
+                        <h2 class="card-title text-info font-weight-bold mb-4">MODIFICAR PERSONA
+                            CI: {{ persona.carnetIdentidad ~ '-' ~ ' ' ~persona.nombreCompleto }}</h2>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-body" style="background: #fdfdfd">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <!-- Tabs with icons -->
+                                    <div class="nav-wrapper">
+                                        <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text"
+                                            role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-1" role="tab"
+                                                   aria-controls="tabs-icons-text-1" aria-selected="true"><i
+                                                            class="ni ni-cloud-upload-96 mr-2"></i>Generales</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-2" role="tab"
+                                                   aria-controls="tabs-icons-text-2" aria-selected="false"><i
+                                                            class="fa fa-user mr-2 text-blue"></i>Personal Artístico</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-3" role="tab"
+                                                   aria-controls="tabs-icons-text-3" aria-selected="false"><i
+                                                            class="fa fa-user-check mr-2 text-blue"></i>Trabajador por
+                                                    cuenta propia</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card shadow">
+                                        <div class="card-body" style="background: #fdfdfd">
+                                            <div class="tab-content" id="myTabContent">
+                                                <div class="tab-pane fade show active" id="tabs-icons-text-1"
+                                                     role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editNombre">Nombre</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el nombre" id="editNombre"
+                                                                       name="editNombre" value="{{ persona.nombre }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editPrimerApellido">Primer Apellido</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el primer apellido"
+                                                                       id="editPrimerApellido"
+                                                                       name="editPrimerApellido"
+                                                                       value="{{ persona.primerApellido }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editSegundoApellido">Segundo
+                                                                    Apellido</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el segundo apellido"
+                                                                       id="editSegundoApellido"
+                                                                       name="editSegundoApellido"
+                                                                       value="{{ persona.segundoApellido }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-12 pr-1"
+                                                             style="padding-top: 40px">
+                                                            <div class="form-group">
+                                                                {% if persona.isNIT == 1 %}
+                                                                    <div class="md-checkbox">
+                                                                        <input type="checkbox" id="editNIT"
+                                                                               class="md-check" checked>
+                                                                        <label for="editNIT">
+                                                                            <span></span>
+                                                                            <span class="check"></span>
+                                                                            <span class="box"></span>
+                                                                            NIT </label>
+                                                                    </div>
+                                                                {% else %}
+                                                                    <div class="md-checkbox">
+                                                                        <input type="checkbox" id="editNIT"
+                                                                               class="md-check">
+                                                                        <label for="editNIT">
+                                                                            <span></span>
+                                                                            <span class="check"></span>
+                                                                            <span class="box"></span>
+                                                                            NIT </label>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editSexo">Sexo</label>
+                                                                <select class="form-control" id="editSexo"
+                                                                        name="editSexo">
+                                                                    <option value="{{ persona.sexo.id }}">{{ persona.sexo.nombre }}</option>
+                                                                    {% for sexo in  sexos %}
+                                                                        <option value="{{ sexo.id }}">{{ sexo.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editAlias">Conocido por</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el alias" id="editAlias"
+                                                                       name="editAlias" value="{{ persona.alias }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editCiudadania">Ciudadanía</label>
+                                                                <select class="form-control" id="editCiudadania"
+                                                                        name="editCiudadania">
+                                                                    <option value="{{ persona.ciudadania.id }}">{{ persona.ciudadania.nombre }}</option>
+                                                                    {% for ciudadania in  ciudadanias %}
+                                                                        <option value="{{ ciudadania.id }}">{{ ciudadania.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editTelefono">Teléfono</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el teléfono"
+                                                                       id="editTelefono"
+                                                                       name="editTelefono"
+                                                                       value="{{ persona.telefono }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editDireccion">Dirección</label>
+                                                                <textarea class="form-control textarea"
+                                                                          id="editDireccion" name="editDireccion"
+                                                                          placeholder="Teclee la dirección">{{ persona.direccion }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-2-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editProfesion">Profesión</label>
+                                                                        <select class="form-control" id="editProfesion"
+                                                                                name="editProfesion">
+                                                                            {% if (persona.profesion) %}
+                                                                                <option value="{{ persona.profesion.id }}">{{ persona.profesion.nombre }}</option>
+                                                                            {% else %}
+                                                                                <option value="0">Seleccione ...
+                                                                                </option>
+                                                                            {% endif %}
+                                                                            {% for profesion in  profesiones %}
+                                                                                <option value="{{ profesion.id }}">{{ profesion.nombre }}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editNoRegistro">No. Registro del
+                                                                            Creador</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el registro"
+                                                                               id="editNoRegistro"
+                                                                               name="editNoRegistro"
+                                                                               value="{{ persona.noRegistroCreador }}">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label "
+                                                                               for="multi-cargos"><strong>Seleccione
+                                                                                los conceptos:</strong></label>
+                                                                        <select multiple="multiple" id="multi-cargos"
+                                                                                name="multi-cargos"
+                                                                                class="form-control">
+                                                                            {% for cargo in cargos %}
+                                                                                {% if cargo.isServicio != 1 %}
+                                                                                    {% if not (cargo in persona.personaCargos) %}
+                                                                                        <option value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% else %}
+                                                                                        <option class="misCargos"
+                                                                                                value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-3-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editNoLicencia">No. Licencia</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee la licencia"
+                                                                               id="editNoLicencia"
+                                                                               name="editNoLicencia"
+                                                                               value="{{ persona.noLicencia }}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-8 col-md-8 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editTituloLicencia">Título
+                                                                            Licencia</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el título de la licencia"
+                                                                               id="editTituloLicencia"
+                                                                               name="editTituloLicencia"
+                                                                               value="{{ persona.tituloLicencia }}">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-6 col-md-6 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editNoCuentaCUP">No. Cuenta
+                                                                            CUP</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de cuenta CUP"
+                                                                               id="editNoCuentaCUP"
+                                                                               name="editNoCuentaCUP"
+                                                                               value="{{ persona.noCuentaCUP }}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6 col-md-6 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editNoCuentaCUC">No. Cuenta
+                                                                            CUC</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de cuenta CUC"
+                                                                               id="editNoCuentaCUC"
+                                                                               name="editNoCuentaCUC"
+                                                                               value="{{ persona.noCuentaCUC }}">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editBanco">Banco</label>
+                                                                        <select class="form-control" id="editBanco"
+                                                                                name="editBanco">
+                                                                            {% if persona.banco %}
+                                                                                <option value="{{ persona.banco.id }}">{{ persona.banco.nombre }}</option>
+                                                                            {% else %}
+                                                                                <option value="0">Seleccione ...</option>
+                                                                            {% endif %}
+                                                                            {% for banco in  bancos %}
+                                                                                <option value="{{ banco.id }}">{{ banco.nombre }}</option>
+                                                                            {% endfor %}
+
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editNoSucursal">No. Sucursal</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de Sucursal"
+                                                                               id="editNoSucursal"
+                                                                               name="editNoSucursal"
+                                                                               value="{{ persona.noSucursal }}">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="editNoLicenciaSanitaria">No.
+                                                                            Licencia Sanitaria</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de licencia sanitaria"
+                                                                               id="editNoLicenciaSanitaria"
+                                                                               name="editNoLicenciaSanitaria"
+                                                                               value="{{ persona.noLicenciaSanitaria }}">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label "
+                                                                               for="multi-servicios"><strong>Seleccione
+                                                                                los servicios:</strong></label>
+                                                                        <select multiple="multiple" id="multi-servicios"
+                                                                                name="multi-servicios"
+                                                                                class="form-control">
+                                                                            {% for cargo in cargos %}
+                                                                                {% if cargo.isServicio == 1 %}
+                                                                                    {% if not (cargo in persona.personaServicios) %}
+                                                                                        <option value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% else %}
+                                                                                        <option class="misServicios"
+                                                                                                value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="button" class="btn btn-primary btn-round" id="btnEditGuardar"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Guardar la persona">Aceptar
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-round" id="btnEditCancelar"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Salir">Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('easyadmin/plugins/multiselect/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ asset('easyadmin/plugins/quicksearch/src/jquery.quicksearch.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function () {
+                {% if not (is_granted("ROLE_PERSONA") or is_granted("ROLE_SUPERUSUARIO")) %}
+                window.location.href = "{{ path('login') }}";
+                {% else %}
+                {% for nivel in app.user.nivelAccesos() if nivel == 'PERSONA' %}
+                {% else %}
+                window.location.href = "{{ path('login') }}";
+                {% endfor %}
+                {% endif %}
+            })();
+
+            //--------- abandonar el formulario -----------------
+            $('#btnEditCancelar').on('click', function () {
+                var enlace = "{{ path('cancelarEditPersona', {noCarnetIdentidad:'id'}) }}";
+                var ruta = enlace.replace('id', '{{ persona.carnetIdentidad }}');
+                window.location.href = ruta;
+            });
+
+            $('#multi-cargos, #multi-servicios').multiSelect({
+                selectableHeader: "<input type='text' class='search-input input-lg' autocomplete='off' placeholder='Buscar'>",
+                selectionHeader: "<input type='text' class='search-input input-lg' autocomplete='off' placeholder='Buscar'>",
+                afterInit: function(ms){
+                    var that = this,
+                        $selectableSearch = that.$selectableUl.prev(),
+                        $selectionSearch = that.$selectionUl.prev(),
+                        selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                        selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+                    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                        .on('keydown', function(e){
+                            if (e.which === 40){
+                                that.$selectableUl.focus();
+                                return false;
+                            }
+                        });
+
+                    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                        .on('keydown', function(e){
+                            if (e.which == 40){
+                                that.$selectionUl.focus();
+                                return false;
+                            }
+                        });
+                },
+                afterSelect: function(){
+                    this.qs1.cache();
+                    this.qs2.cache();
+                },
+                afterDeselect: function(){
+                    this.qs1.cache();
+                    this.qs2.cache();
+                }
+            });
+
+
+            $('.ms-list .ms-elem-selectable.misCargos').each(function () {
+                $(this).css('display', 'none');
+                $(this).addClass('ms-hover');
+                $(this).addClass('ms-selected');
+
+            });
+
+            $('.ms-list .ms-elem-selection.misCargos').each(function () {
+                $(this).addClass('ms-selected');
+                $(this).css('display', '');
+            });
+
+            $('.ms-list .ms-elem-selectable.misServicios').each(function () {
+                $(this).css('display', 'none');
+                $(this).addClass('ms-hover');
+                $(this).addClass('ms-selected');
+
+            });
+
+            $('.ms-list .ms-elem-selection.misServicios').each(function () {
+                $(this).addClass('ms-selected');
+                $(this).css('display', '');
+            });
+
+            $('#btnEditGuardar').on('click', function () {
+
+                //Validaciones
+                if ($("#editNombre").val() === '') {
+                    alertify.alert('<strong>El nombre es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editPrimerApellido").val() === '') {
+                    alertify.alert('<strong>El primer apellido es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editSegundoApellido").val() === '') {
+                    alertify.alert('<strong>El segundo apellido es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editDireccion").val() === '') {
+                    alertify.alert('<strong>La dirección es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editCiudadania").val() === '0') {
+                    alertify.alert('<strong>La ciudadanía es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                var cargos = [];
+
+                $('#ms-multi-cargos li.ms-elem-selectable ').each(function () {
+
+                    if ($(this).hasClass('ms-selected')) {
+
+                        var valor = $(this).text();
+                        cargos.push(valor);
+                    }
+                });
+
+                var servicios = [];
+
+                $('#ms-multi-servicios li.ms-elem-selectable ').each(function () {
+
+                    if ($(this).hasClass('ms-selected')) {
+
+                        var servicio = $(this).text();
+                        servicios.push(servicio);
+                    }
+                });
+
+                var isPA = 0;
+                var isTCP = 0;
+                var noLicencia = 0;
+                var noLicenciaSanitaria = 0;
+
+                if (($('#ms-multi-cargos li.ms-elem-selectable ').hasClass('ms-selected'))) {
+                    isPA = 1;
+                }
+
+                if (($('#ms-multi-servicios li.ms-elem-selectable ').hasClass('ms-selected'))) {
+                    isTCP = 1;
+                    noLicencia = $("#editNoLicencia").val()
+                    $('#ms-multi-servicios li.ms-elem-selectable ').each(function () {
+                        if ($(this).hasClass('ms-selected')) {
+                            if ($(this).text() === 'Alimentación') {
+                                noLicenciaSanitaria = $(this).text();
+                            }
+                        }
+                    });
+                }
+
+                var nit = 0;
+                if ($('#editNIT').prop('checked')) {
+                    nit = 1;
+                }
+
+                if (isPA === 0 && isTCP === 0) {
+                    alertify.alert('<strong>Debe definir si la persona es personal artístico ó trabajador por cuenta propia.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                //Si es PA
+                if (isPA === 1) {
+                    if ($("#editProfesion").val() === '0') {
+                        alertify.alert('<strong>La profesión es obligatoria, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+                }
+
+                //Si es cuenta propista
+                if (isTCP === 1) {
+
+                    if ($("#editNoLicencia").val() === 0) {
+                        alertify.alert('<strong>El no. licencia es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#editTituloLicencia").val() === '') {
+                        alertify.alert('<strong>El título de la licencia es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#editNoCuentaCUP").val() === '') {
+                        alertify.alert('<strong>El no. de cuenta en CUP es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#editNoCuentaCUC").val() === '') {
+                        alertify.alert('<strong>El no. de cuenta en CUC es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#editBanco").val() === '0') {
+                        alertify.alert('<strong>El banco es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#editNoSucursal").val() === '') {
+                        alertify.alert('<strong>El no. de sucursal es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if (noLicenciaSanitaria !== 0) {
+                        if ($("#editoLicenciaSanitaria").val() === '') {
+                            alertify.alert('<strong>El no. de licencia sanitaria es obligatorio, no puede quedar en blanco.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                                .set('label', 'Aceptar');
+                            return false;
+                        }
+                    }
+
+                }
+
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    cI: {{ persona.carnetIdentidad }},
+                    nombre: $("#editNombre").val(),
+                    primerApellido: $("#editPrimerApellido").val(),
+                    segundoApellido: $("#editSegundoApellido").val(),
+                    profesion: $("#editProfesion").val(),
+                    ciudadania: $("#editCiudadania").val(),
+                    direccion: $("#editDireccion").val(),
+                    alias: $("#editAlias").val(),
+                    sexo: $("#editSexo").val(),
+                    telefono: $("#editTelefono").val(),
+                    cargos: cargos,
+                    servicios: servicios,
+                    nit: nit,
+                    noRegistro: $("#editNoRegistro").val(),
+                    noLicencia: noLicencia,
+                    tituloLicencia: $("#editTituloLicencia").val(),
+                    noCuentaCUP: $("#editNoCuentaCUP").val(),
+                    noCuentaCUC: $("#editNoCuentaCUC").val(),
+                    banco: $("#editBanco").val(),
+                    noSucursal: $("#editNoSucursal").val(),
+                    noLicenciaSanitaria: $("#editNoLicenciaSanitaria").val(),
+                    isPA: isPA,
+                    isTCP: isTCP
+                };
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("updatePersona") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+
+                    if (data === 'ok') {
+
+                        var enlace = "{{ path('cancelarEditPersona', {noCarnetIdentidad:'id'}) }}";
+                        var ruta = enlace.replace('id', '{{ persona.carnetIdentidad }}');
+                        window.location.href = ruta;
+
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+        });
+    </script>
+{% endblock %}
+

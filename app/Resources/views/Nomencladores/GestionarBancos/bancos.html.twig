@@ -1,0 +1,286 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">Nomencladores</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="{{ path('inicio') }}"><i
+                                                class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('gestionarBancos') }}">Bancos</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Bancos</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Nomenclador de Banco</h3>
+                        <div class="col-lg-12 col-12 text-right">
+                            <button class="btn btn-sm btn-default" id="addNuevoBanco" type="button"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Agregar una nuevo banco">Nuevo
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Light table -->
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="dataBancos">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col" class="text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                            {% if bancos %}
+                                {% for banco in bancos %}
+                                    <tr data-id="{{ banco.id }}">
+                                        <td>{{ banco.nombre }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-info btn-icon-only rounded-circle editBanco"
+                                                    type="button" data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="Modificar">
+                                        <span class="btn-inner--icon"><i
+                                                    class="fas fa-edit"></i></span>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger btn-icon-only rounded-circle borrarBanco"
+                                                    type="button" data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    title="Eliminar">
+                                                                                 <span class="btn-inner--icon"><i
+                                                                                             class="fas fa-trash"></i></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{ include('Nomencladores/GestionarBancos/modalAddBanco.html.twig') }}
+            {{ include('Nomencladores/GestionarBancos/modalEditBanco.html.twig') }}
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function () {
+                {% if not (is_granted("ROLE_SUPERUSUARIO") or is_granted("ROLE_ADMINISTRADOR")) %}
+                window.location.href = "{{ path('login') }}";
+                {% else %}
+                {% for nivel in app.user.nivelAccesos() if nivel == 'ADMINISTRACION' %}
+                {% else %}
+                window.location.href = "{{ path('login') }}";
+                {% endfor %}
+                {% endif %}
+            })();
+
+            $('#dataBancos').DataTable({
+                "lengthChange": false,
+                "lengthMenu": [[10], [10]]
+            });
+
+            $('#addNuevoBanco').on('click', function () {
+                $('#modalAddBanco').modal('show');
+            });
+
+            $('#btnAddGuardar').on('click', function () {
+
+                //Validaciones
+                if ($("#addNombre").val() === '') {
+                    alertify.alert('<strong>El nombre es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                $('#modalAddBanco').modal('hide');
+
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    nombre: $("#addNombre").val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("insertBanco") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+
+                    if (data === 'ok') {
+
+                        alertify.alert('<strong>El banco ha sido insertado correctamente</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                            .set('label', 'Aceptar')
+                            .set('onok', function () {
+                                $('#modalAddProfesion input').each(function () {
+                                    $(this).val('');
+                                });
+                                window.location.href = "{{ path('gestionarBancos') }}";
+                            });
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+            var idBanco = '';
+            var nombre = '';
+
+            $('#dataBancos tbody').on('click', '.editBanco', function () {
+
+                var row = $(this).parents('tr');
+                idBanco = row.data('id');
+
+                {% if bancos %}
+                    {% for banco in bancos %}
+                    var id = parseInt('{{ banco.id }}');
+                    if (id === idBanco) {
+                        $('#editNombre').val('{{ banco.nombre }}');
+                        nombre = '{{ banco.nombre }}';
+                    }
+                    {% endfor %}
+                {% endif %}
+                $('#modalEditBanco').modal('show');
+            });
+
+            $('#btnEditGuardar').on('click', function () {
+
+                //Validaciones
+                if ($("#editNombre").val() === '') {
+                    alertify.alert('<strong>El nombre es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                $('#modalEditBanco').modal('hide');
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    idBanco: idBanco,
+                    nombre: $('#editNombre').val()
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("updateBanco") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+                    if (data === 'ok') {
+
+                        alertify.alert('<strong>El banco ha sido modificado correctamente</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                            .set('label', 'Aceptar')
+                            .set('onok', function () {
+                                window.location.href = "{{ path('gestionarBancos') }}";
+                            });
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+            $('#dataBancos tbody').on('click', '.borrarBanco', function () {
+
+                var row = $(this).parents('tr');
+
+                var mat_datos = {idBanco: row.data('id')};
+
+                alertify.confirm('Basic: false').set('message', '<strong>Seguro que desea eliminar el banco seleccionado</strong>')
+                    .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                        '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                    .set('onok', function () {
+
+                        $(".preload").removeClass('hidden');
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: "html",
+                            url: '{{ path("deleteBanco") }}',
+                            data: mat_datos
+                        }).done(function (data) {
+
+                            $(".preload").addClass('hidden');
+                            if (data === 'ok') {
+
+                                alertify.alert('<strong>El banco seleccionado ha sido eliminado correctamente</strong>')
+                                    .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                        '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                    .set('label', 'Aceptar')
+                                    .set('onok', function () {
+                                        row.fadeOut();
+                                    });
+                            } else {
+                                alertify.alert('<strong>' + data + '</strong>')
+                                    .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                        '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                    .set('label', 'Aceptar')
+                            }
+                        });
+                    });
+            });
+
+        });
+
+    </script>
+{% endblock %}
+

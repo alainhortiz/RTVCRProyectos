@@ -1,0 +1,125 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ProyectoPersonaCargoCorte
+ *
+ * @ORM\Table(name="proyecto_persona_cargo_corte")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ProyectoPersonaCargoCorteRepository")
+ */
+class ProyectoPersonaCargoCorte
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cantidad", type="integer")
+     */
+    private $cantidad;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="presupuestoPago", type="integer")
+     */
+    private $presupuestoPago;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ProyectoPersonaCargo",inversedBy="proyectosPersonasCargosCortes")
+     */
+    protected $proyectoPersonaCargo;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set cantidad
+     *
+     * @param integer $cantidad
+     *
+     * @return ProyectoPersonaCargoCorte
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidad
+     *
+     * @return integer
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
+
+    /**
+     * Set presupuestoPago
+     *
+     * @param integer $presupuestoPago
+     *
+     * @return ProyectoPersonaCargoCorte
+     */
+    public function setPresupuestoPago($presupuestoPago)
+    {
+        $this->presupuestoPago = $presupuestoPago;
+
+        return $this;
+    }
+
+    /**
+     * Get presupuestoPago
+     *
+     * @return integer
+     */
+    public function getPresupuestoPago()
+    {
+        return $this->presupuestoPago;
+    }
+
+    /**
+     * Set proyectoPersonaCargo
+     *
+     * @param \AppBundle\Entity\ProyectoPersonaCargo $proyectoPersonaCargo
+     *
+     * @return ProyectoPersonaCargoCorte
+     */
+    public function setProyectoPersonaCargo(\AppBundle\Entity\ProyectoPersonaCargo $proyectoPersonaCargo = null)
+    {
+        $this->proyectoPersonaCargo = $proyectoPersonaCargo;
+
+        return $this;
+    }
+
+    /**
+     * Get proyectoPersonaCargo
+     *
+     * @return \AppBundle\Entity\ProyectoPersonaCargo
+     */
+    public function getProyectoPersonaCargo()
+    {
+        return $this->proyectoPersonaCargo;
+    }
+}

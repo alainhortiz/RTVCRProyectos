@@ -1,0 +1,118 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ProyectoEmpresaCargo
+ *
+ * @ORM\Table(name="proyecto_empresa_cargo")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ProyectoEmpresaCargoRepository")
+ */
+class ProyectoEmpresaCargo
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="noContrato", type="string", length=10, nullable=false)
+     */
+    private $noContrato;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="isTCP", type="boolean", nullable=true)
+     */
+    private $isTCP = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="isPA", type="boolean", nullable=true)
+     */
+    private $isPA = false;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="presupuestoCargo", type="decimal", precision=18, scale=2, nullable=false)
+     */
+    private $presupuestoCargo;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="presupuestoOtroIngreso", type="decimal", precision=18, scale=2, nullable=true)
+     */
+    private $presupuestoOtroIngreso;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="presupuestoTotal", type="decimal", precision=18, scale=2, nullable=false)
+     */
+    private $presupuestoTotal;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="valorPrograma", type="decimal", precision=18, scale=2, nullable=false)
+     */
+    private $valorPrograma;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="presupuestoRestante", type="decimal", precision=18, scale=2, nullable=true)
+     */
+    private $presupuestoRestante;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Proyecto",inversedBy="proyectosEmpresasCargos")
+     */
+    protected $proyecto;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Empresa",inversedBy="proyectosEmpresasCargos")
+     */
+    protected $empresa;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Cargo",inversedBy="proyectosEmpresasCargos")
+     */
+    protected $cargo;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ProyectoEmpresaReporte", mappedBy="proyectoEmpresaCargo")
+     */
+    private $proyectosEmpresasReportes;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->proyectosEmpresasReportes = new ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}

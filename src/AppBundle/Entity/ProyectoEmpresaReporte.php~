@@ -1,0 +1,87 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ProyectoEmpresaReporte
+ *
+ * @ORM\Table(name="proyecto_empresa_reporte")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ProyectoEmpresaReporteRepository")
+ */
+class ProyectoEmpresaReporte
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="noSuplemento", type="integer", nullable=false)
+     */
+    private $noSuplemento;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cantidadProgramas", type="integer", nullable=false)
+     */
+    private $cantidadProgramas;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ingreso", type="decimal", precision=18, scale=2, nullable=false)
+     */
+    private $ingreso;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="porciento", type="decimal", precision=18, scale=2, nullable=false)
+     */
+    private $porciento;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="presupuestoACobrar", type="decimal", precision=18, scale=2, nullable=false)
+     */
+    private $presupuestoACobrar;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="presupuestoRestante", type="decimal", precision=18, scale=2, nullable=false)
+     */
+    private $presupuestoRestante;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\ProyectoEmpresaCargo",inversedBy="proyectosEmpresasReportes")
+     */
+    protected $proyectoEmpresaCargo;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Reporte",inversedBy="proyectosEmpresasReportes")
+     */
+    protected $reporte;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

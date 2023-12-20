@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">Nomencladores</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="{{ path('inicio') }}"><i
+                                                class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('gestionarTipos') }}">Usuarios</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Nomenclador de usuarios</h3>
+                        <div class="col-lg-12 col-12 text-right">
+                            <a href="{{ path('addUsuario') }}" class="btn btn-sm btn-default" id="addNuevoUsuario" data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Agregar un nuevo usuario">Nuevo
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Light table -->
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="dataUsuario">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Primer Apellido</th>
+                                <th scope="col">Segundo Apellido</th>
+                                <th scope="col" class="text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                            {% for usuario in usuarios %}
+                                {% if not ('ROLE_SUPERUSUARIO' in usuario.getUsuarioRoles()) %}
+                                    <tr data-id ="{{ usuario.id }}">
+                                        <td>{{ usuario.username }}</td>
+                                        <td>{{ usuario.nombre }}</td>
+                                        <td>{{ usuario.primerApellido }}</td>
+                                        <td>{{ usuario.segundoApellido }}</td>
+                                        <td class="text-center">
+                                            <a href="{{ path('editUsuario' , {idUsuario:usuario.id}) }}" style="margin-top: 5px" class="btn btn-sm btn-info btn-icon-only rounded-circle" data-toggle="tooltip" data-placement="left"
+                                               title="Modificar el Usuario">
+                                                <span class="btn-inner--icon"><i class="fas fa-edit"></i></span></a>
+                                            <a href="{{ path('resetearPasswordForm' , {idUsuario:usuario.id}) }}" style="margin-top: 5px" class="btn btn-sm btn-warning btn-icon-only rounded-circle resetear" data-toggle="tooltip" data-placement="left"
+                                               title="Resetear contraseña el Usuario">
+                                                <span class="btn-inner--icon"><i class="fas fa-unlock"></i></span></a>
+                                            <a href="#" style="margin-top: 5px" class="btn btn-sm btn-danger btn-icon-only rounded-circle delete" data-toggle="tooltip" data-placement="left"
+                                               title="Desactivar el Usuario">
+                                            <span class="btn-inner--icon"><i
+                                                        class="fas fa-close"></i></span></a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function () {
+                {% if not (is_granted("ROLE_SUPERUSUARIO") or is_granted("ROLE_ADMINISTRADOR")) %}
+                window.location.href = "{{ path('login') }}";
+                {% endif %}
+            })();
+
+            $('#dataUsuario').DataTable();
+
+            $('#dataUsuario tbody').on('click', '.delete', function () {
+
+                var row = $(this).parents('tr');
+
+                var mat_datos = { idUsuario: row.data('id') };
+
+                alertify.confirm('Basic: false').set('message', 'Seguro que desea desactivar el Usuario seleccionado')
+                    .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                        '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                    .set('onok', function(){
+
+                    $(".preload").removeClass('hidden');
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: "html",
+                        url: '{{ path("deleteUsuario") }}',
+                        data: mat_datos
+                    }).done(function (data) {
+                        $(".preload").addClass('hidden');
+                        if(data == 'ok'){
+
+                            alertify.alert('<strong>El usuario ha sido desactivado correctamente</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmacion</h4>')
+                                .set('label','Aceptar')
+                        }else  if(data == 'desactivar'){
+
+                            alertify.confirm('Basic: false')
+                                .set('message', 'Hay datos relacionados con este usuario , no se puede eliminar </br>' +
+                                    'Desea desactivar el usuario seleccionado, el usuario permanecerá en el sistema pero no se podrá usar')
+                                .set('onok', function(){
+
+                                    $(".preload").removeClass('hidden');
+
+                                    $.ajax({
+                                        type: "POST",
+                                        dataType: "html",
+                                        url: '{{ path("desactivarUsuario") }}',
+                                        data: mat_datos
+                                    }).done(function (data) {
+                                        $(".preload").addClass('hidden');
+                                        if(data == 'ok'){
+
+                                            alertify.alert('<strong>El usuario  ha sido desactivado correctamente</strong>')
+                                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmacion</h4>')
+                                                .set('label','Aceptar')
+                                                .set('onok', function(){
+
+                                                    row.fadeOut();
+                                                });
+                                        }else {
+                                            alertify.alert('<strong>'+data+'</strong>')
+                                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmacion</h4>')
+                                                .set('label','Aceptar')
+                                        }
+                                    });
+                                });
+
+
+                        }else {
+                            alertify.alert('<strong>'+data+'</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmacion</h4>')
+                                .set('label','Aceptar')
+                        }
+                    });
+                });
+            });
+
+        });
+
+    </script>
+{% endblock %}
+

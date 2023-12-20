@@ -1,0 +1,392 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">Nomencladores</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="{{ path('inicio') }}"><i
+                                                class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('gestionarCargos') }}">Conceptos</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Conceptos</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Nomenclador de Conceptos</h3>
+                        <div class="col-lg-12 col-12 text-right">
+                            <button class="btn btn-sm btn-default" id="addNuevoCargo" type="button"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="Agregar un nuevo cargo">Nuevo
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Light table -->
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="dataCargos">
+                            <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col" width="50%">Función</th>
+                                <th scope="col" class="text-center">Servicios</th>
+                                <th scope="col" class="text-center">Tipo de Contrato</th>
+                                <th scope="col" class="text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                            {% for cargo in cargos %}
+                                <tr data-id="{{ cargo.id }}">
+                                    <td>{{ cargo.nombre }}</td>
+                                    {% if (cargo.funcion) %}
+                                        <td ><textarea rows="8"
+                                                      class="form-control textarea" readonly>{{ cargo.funcion }}</textarea></td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <td class="text-center">
+                                        {% if cargo.isServicio == 1 %}
+                                            <div class="md-checkbox" style="margin-left: 50%">
+                                                <input type="checkbox" disabled class="md-check" checked>
+                                                <label>
+                                                    <span></span>
+                                                    <span class="check"></span>
+                                                    <span class="box"></span>
+                                                </label>
+                                            </div>
+                                        {% else %}
+                                            <div class="md-checkbox" style="margin-left: 50%">
+                                                <input type="checkbox" disabled class="md-check">
+                                                <label>
+                                                    <span></span>
+                                                    <span class="check"></span>
+                                                    <span class="box"></span>
+                                                </label>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    {% if (cargo.tipoContrato) %}
+                                        <td class="text-center">{{ cargo.tipoContrato.nombre }}</td>
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-info btn-icon-only rounded-circle editCargo"
+                                                type="button" data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Modificar">
+                                        <span class="btn-inner--icon"><i
+                                                    class="fas fa-edit"></i></span>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger btn-icon-only rounded-circle borrarCargo"
+                                                type="button" data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Eliminar">
+                                                                                 <span class="btn-inner--icon"><i
+                                                                                             class="fas fa-trash"></i></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {{ include('Nomencladores/GestionarCargos/modalAddCargo.html.twig') }}
+            {{ include('Nomencladores/GestionarCargos/modalEditCargo.html.twig') }}
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function () {
+                {% if not (is_granted("ROLE_SUPERUSUARIO") or is_granted("ROLE_ADMINISTRADOR")) %}
+                window.location.href = "{{ path('login') }}";
+                {% else %}
+                {% for nivel in app.user.nivelAccesos() if nivel == 'ADMINISTRACION' %}
+                {% else %}
+                window.location.href = "{{ path('login') }}";
+                {% endfor %}
+                {% endif %}
+            })();
+
+            $('#dataCargos').DataTable({
+                "lengthChange": false,
+                "lengthMenu": [[5], [5]],
+            });
+
+            $('#addNuevoCargo').on('click', function () {
+                $('#modalAddCargo').modal('show');
+            });
+
+            var servicio = 0;
+            var msg;
+            var msg2;
+            $('#btnAddGuardar').on('click', function () {
+
+                //Validaciones
+                if ($("#addNombre").val() === '') {
+                    alertify.alert('<strong>El nombre es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addTipoContrato").val() === '0') {
+                    alertify.alert('<strong>El tipo de contrato es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                $('#modalAddCargo').modal('hide');
+
+                if ($('#addServicio').prop('checked')) {
+                    servicio = 1;
+                }
+
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    nombre: $("#addNombre").val(),
+                    funcion: $("#addFuncion").val(),
+                    servicio: servicio,
+                    tipoContrato: $("#addTipoContrato").val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("insertCargo") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+
+                    if (data === 'ok') {
+                        if (servicio === 1) {
+                            msg = 'El servicio ha sido insertado correctamente';
+                        } else {
+                            msg = 'El concepto ha sido insertado correctamente';
+                        }
+                        alertify.alert('<strong>' + msg + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                            .set('label', 'Aceptar')
+                            .set('onok', function () {
+                                $('#modalAddCargo input').each(function () {
+                                    $(this).val('');
+                                });
+                                window.location.href = "{{ path('gestionarCargos') }}";
+                            });
+
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+            var idCargo = '';
+            var nombre = '';
+            var funcion = '';
+
+            $('#dataCargos tbody').on('click', '.editCargo', function () {
+
+                var row = $(this).parents('tr');
+                idCargo = row.data('id');
+
+                var servicio = 0;
+                {% for cargo in cargos %}
+                var id = parseInt('{{ cargo.id }}');
+                if (id === idCargo) {
+                    $('#editNombre').val('{{ cargo.nombre }}');
+                    $('#editFuncion').text('{{ cargo.funcion }}');
+                    {% if (cargo.tipoContrato) %}
+                        $('#editTipoContrato').val('{{ cargo.tipoContrato.id }}');
+                    {% else %}
+                    $('#editTipoContrato').val(0);
+                    {% endif %}
+                    nombre = '{{ cargo.nombre }}';
+                    funcion = '{{ cargo.funcion }}';
+                    servicio = '{{ cargo.isServicio }}';
+                    if (servicio === '1') {
+                        $('#editServicio').prop("checked", true);
+                    } else {
+                        $('#editServicio').prop("checked", false);
+                    }
+                }
+                {% endfor %}
+                $('#modalEditCargo').modal('show');
+            });
+
+            $('#btnEditGuardar').on('click', function () {
+
+                //Validaciones
+                if ($("#editNombre").val() === '') {
+                    alertify.alert('<strong>El nombre es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editTipoContrato").val() === '0') {
+                    alertify.alert('<strong>El tipo de contrato es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                $('#modalEditCargo').modal('hide');
+
+                if ($('#editServicio').prop('checked')) {
+                    servicio = 1;
+                }
+
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    idCargo: idCargo,
+                    nombre: $('#editNombre').val(),
+                    funcion: $("#editFuncion").val(),
+                    servicio: servicio,
+                    tipoContrato: $("#editTipoContrato").val()
+                };
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("updateCargo") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+                    if (data === 'ok') {
+                        if (servicio === 1) {
+                            msg = 'El servicio ha sido modificado correctamente';
+                        } else {
+                            msg = 'El concepto ha sido modificado correctamente';
+                        }
+                        alertify.alert('<strong>' + msg + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                            .set('label', 'Aceptar')
+                            .set('onok', function () {
+                                window.location.href = "{{ path('gestionarCargos') }}";
+                            });
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+            $('#dataCargos tbody').on('click', '.borrarCargo', function () {
+
+                var row = $(this).parents('tr');
+                var idCargo = row.data('id');
+
+                {% for cargo in cargos %}
+                var id = parseInt('{{ cargo.id }}');
+                if (id === idCargo) {
+                    servicio = '{{ cargo.isServicio }}';
+
+                    if (servicio === '1') {
+                        msg = 'Seguro que desea eliminar el servicio seleccionado';
+                        msg2 = 'El servicio seleccionado ha sido eliminado correctamente';
+                    } else {
+                        msg = 'Seguro que desea eliminar el concepto seleccionado';
+                        msg2 = 'El concepto seleccionado ha sido eliminado correctamente';
+                    }
+
+                }
+                {% endfor %}
+
+                var mat_datos = {idCargo: row.data('id')};
+
+                alertify.confirm('Basic: false').set('message', '<strong>' + msg + '</strong>')
+                    .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                        '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                    .set('onok', function () {
+
+                        $(".preload").removeClass('hidden');
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: "html",
+                            url: '{{ path("deleteCargo") }}',
+                            data: mat_datos
+                        }).done(function (data) {
+
+                            $(".preload").addClass('hidden');
+                            if (data === 'ok') {
+
+                                alertify.alert('<strong>' + msg2 + '</strong>')
+                                    .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                        '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                    .set('label', 'Aceptar')
+                                    .set('onok', function () {
+                                        row.fadeOut();
+                                    });
+                            } else {
+                                alertify.alert('<strong>' + data + '</strong>')
+                                    .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                        '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                    .set('label', 'Aceptar')
+                            }
+                        });
+                    });
+            });
+
+        });
+
+    </script>
+{% endblock %}
+

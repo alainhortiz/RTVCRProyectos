@@ -1,0 +1,599 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Proyecto
+ *
+ * @ORM\Table(name="proyecto")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ProyectoRepository")
+ */
+class Proyecto
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="noContratoCanal", type="string", length=50)
+     */
+    private $noContratoCanal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="titulo", type="string", length=150)
+     */
+    private $titulo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombresDirectorGeneral", type="string", length=100)
+     */
+    private $nombresDirectorGeneral;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombresProductorGeneral", type="string", length=100)
+     */
+    private $nombresProductorGeneral;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="tiempoPantalla", type="integer")
+     */
+    private $tiempoPantalla;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="emisiones", type="integer")
+     */
+    private $emisiones;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="fechaInicio", type="date")
+     */
+    private $fechaInicio;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="fechaTerminacion", type="date")
+     */
+    private $fechaTerminacion;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="etapaPreFilmacion", type="integer")
+     */
+    private $etapaPreFilmacion;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="etapaFilmacion", type="integer")
+     */
+    private $etapaFilmacion;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="etapaPostFilmacion", type="integer")
+     */
+    private $etapaPostFilmacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=255, nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="isConcluido", type="boolean",nullable=true)
+     */
+    private $isConcluido = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FormatoProyecto",inversedBy="proyectos")
+     */
+    protected $formato;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TipoProyecto",inversedBy="proyectos")
+     */
+    protected $tipo;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProyectoPersonaCargo", mappedBy="proyecto")
+     */
+    private $proyectosPersonasCargos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProyectoEmpresaCargo", mappedBy="proyecto")
+     */
+    private $proyectosEmpresasCargos;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Reporte", mappedBy="proyecto")
+     */
+    private $reportes;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->proyectosPersonasCargos = new ArrayCollection();
+        $this->proyectosEmpresasCargos = new ArrayCollection();
+        $this->reportes = new ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set titulo
+     *
+     * @param string $titulo
+     *
+     * @return Proyecto
+     */
+    public function setTitulo($titulo)
+    {
+        $this->titulo = $titulo;
+
+        return $this;
+    }
+
+    /**
+     * Get titulo
+     *
+     * @return string
+     */
+    public function getTitulo()
+    {
+        return $this->titulo;
+    }
+
+    /**
+     * Set tiempoPantalla
+     *
+     * @param integer $tiempoPantalla
+     *
+     * @return Proyecto
+     */
+    public function setTiempoPantalla($tiempoPantalla)
+    {
+        $this->tiempoPantalla = $tiempoPantalla;
+
+        return $this;
+    }
+
+    /**
+     * Get tiempoPantalla
+     *
+     * @return integer
+     */
+    public function getTiempoPantalla()
+    {
+        return $this->tiempoPantalla;
+    }
+
+    /**
+     * Set fechaInicio
+     *
+     * @param \DateTime $fechaInicio
+     *
+     * @return Proyecto
+     */
+    public function setFechaInicio($fechaInicio)
+    {
+        $this->fechaInicio = $fechaInicio;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaInicio
+     *
+     * @return \DateTime
+     */
+    public function getFechaInicio()
+    {
+        return $this->fechaInicio;
+    }
+
+    /**
+     * Set fechaTerminacion
+     *
+     * @param \DateTime $fechaTerminacion
+     *
+     * @return Proyecto
+     */
+    public function setFechaTerminacion($fechaTerminacion)
+    {
+        $this->fechaTerminacion = $fechaTerminacion;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaTerminacion
+     *
+     * @return \DateTime
+     */
+    public function getFechaTerminacion()
+    {
+        return $this->fechaTerminacion;
+    }
+
+    /**
+     * Set etapaPreFilmacion
+     *
+     * @param integer $etapaPreFilmacion
+     *
+     * @return Proyecto
+     */
+    public function setEtapaPreFilmacion($etapaPreFilmacion)
+    {
+        $this->etapaPreFilmacion = $etapaPreFilmacion;
+
+        return $this;
+    }
+
+    /**
+     * Get etapaPreFilmacion
+     *
+     * @return integer
+     */
+    public function getEtapaPreFilmacion()
+    {
+        return $this->etapaPreFilmacion;
+    }
+
+    /**
+     * Set etapaFilmacion
+     *
+     * @param integer $etapaFilmacion
+     *
+     * @return Proyecto
+     */
+    public function setEtapaFilmacion($etapaFilmacion)
+    {
+        $this->etapaFilmacion = $etapaFilmacion;
+
+        return $this;
+    }
+
+    /**
+     * Get etapaFilmacion
+     *
+     * @return integer
+     */
+    public function getEtapaFilmacion()
+    {
+        return $this->etapaFilmacion;
+    }
+
+    /**
+     * Set etapaPostFilmacion
+     *
+     * @param integer $etapaPostFilmacion
+     *
+     * @return Proyecto
+     */
+    public function setEtapaPostFilmacion($etapaPostFilmacion)
+    {
+        $this->etapaPostFilmacion = $etapaPostFilmacion;
+
+        return $this;
+    }
+
+    /**
+     * Get etapaPostFilmacion
+     *
+     * @return integer
+     */
+    public function getEtapaPostFilmacion()
+    {
+        return $this->etapaPostFilmacion;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     *
+     * @return Proyecto
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set formato
+     *
+     * @param \AppBundle\Entity\FormatoProyecto $formato
+     *
+     * @return Proyecto
+     */
+    public function setFormato(\AppBundle\Entity\FormatoProyecto $formato = null)
+    {
+        $this->formato = $formato;
+
+        return $this;
+    }
+
+    /**
+     * Get formato
+     *
+     * @return \AppBundle\Entity\FormatoProyecto
+     */
+    public function getFormato()
+    {
+        return $this->formato;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param \AppBundle\Entity\TipoProyecto $tipo
+     *
+     * @return Proyecto
+     */
+    public function setTipo(\AppBundle\Entity\TipoProyecto $tipo = null)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return \AppBundle\Entity\TipoProyecto
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Add proyectosPersonasCargo
+     *
+     * @param \AppBundle\Entity\ProyectoPersonaCargo $proyectosPersonasCargo
+     *
+     * @return Proyecto
+     */
+    public function addProyectosPersonasCargo(\AppBundle\Entity\ProyectoPersonaCargo $proyectosPersonasCargo)
+    {
+        $this->proyectosPersonasCargos[] = $proyectosPersonasCargo;
+
+        return $this;
+    }
+
+    /**
+     * Remove proyectosPersonasCargo
+     *
+     * @param \AppBundle\Entity\ProyectoPersonaCargo $proyectosPersonasCargo
+     */
+    public function removeProyectosPersonasCargo(\AppBundle\Entity\ProyectoPersonaCargo $proyectosPersonasCargo)
+    {
+        $this->proyectosPersonasCargos->removeElement($proyectosPersonasCargo);
+    }
+
+    /**
+     * Get proyectosPersonasCargos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProyectosPersonasCargos()
+    {
+        return $this->proyectosPersonasCargos;
+    }
+
+    /**
+     * Set isConcluido
+     *
+     * @param boolean $isConcluido
+     *
+     * @return Proyecto
+     */
+    public function setIsConcluido($isConcluido)
+    {
+        $this->isConcluido = $isConcluido;
+
+        return $this;
+    }
+
+    /**
+     * Get isConcluido
+     *
+     * @return boolean
+     */
+    public function getIsConcluido()
+    {
+        return $this->isConcluido;
+    }
+
+    /**
+     * Set emisiones
+     *
+     * @param integer $emisiones
+     *
+     * @return Proyecto
+     */
+    public function setEmisiones($emisiones)
+    {
+        $this->emisiones = $emisiones;
+
+        return $this;
+    }
+
+    /**
+     * Get emisiones
+     *
+     * @return integer
+     */
+    public function getEmisiones()
+    {
+        return $this->emisiones;
+    }
+
+    /**
+     * Set noContratoCanal
+     *
+     * @param string $noContratoCanal
+     *
+     * @return Proyecto
+     */
+    public function setNoContratoCanal($noContratoCanal)
+    {
+        $this->noContratoCanal = $noContratoCanal;
+
+        return $this;
+    }
+
+    /**
+     * Get noContratoCanal
+     *
+     * @return string
+     */
+    public function getNoContratoCanal()
+    {
+        return $this->noContratoCanal;
+    }
+
+    /**
+     * Set nombresDirectorGeneral
+     *
+     * @param string $nombresDirectorGeneral
+     *
+     * @return Proyecto
+     */
+    public function setNombresDirectorGeneral($nombresDirectorGeneral)
+    {
+        $this->nombresDirectorGeneral = $nombresDirectorGeneral;
+
+        return $this;
+    }
+
+    /**
+     * Get nombresDirectorGeneral
+     *
+     * @return string
+     */
+    public function getNombresDirectorGeneral()
+    {
+        return $this->nombresDirectorGeneral;
+    }
+
+    /**
+     * Set nombresProductorGeneral
+     *
+     * @param string $nombresProductorGeneral
+     *
+     * @return Proyecto
+     */
+    public function setNombresProductorGeneral($nombresProductorGeneral)
+    {
+        $this->nombresProductorGeneral = $nombresProductorGeneral;
+
+        return $this;
+    }
+
+    /**
+     * Get nombresProductorGeneral
+     *
+     * @return string
+     */
+    public function getNombresProductorGeneral()
+    {
+        return $this->nombresProductorGeneral;
+    }
+
+    public function cantidadContratos()
+    {
+        return count($this->proyectosPersonasCargos);
+    }
+
+    /**
+     * Add reporte
+     *
+     * @param \AppBundle\Entity\Reporte $reporte
+     *
+     * @return Proyecto
+     */
+    public function addReporte(\AppBundle\Entity\Reporte $reporte)
+    {
+        $this->reportes[] = $reporte;
+
+        return $this;
+    }
+
+    /**
+     * Remove reporte
+     *
+     * @param \AppBundle\Entity\Reporte $reporte
+     */
+    public function removeReporte(\AppBundle\Entity\Reporte $reporte)
+    {
+        $this->reportes->removeElement($reporte);
+    }
+
+    /**
+     * Get reportes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getReportes()
+    {
+        return $this->reportes;
+    }
+
+    public function cantidadReportes()
+    {
+        return count($this->reportes);
+    }
+}

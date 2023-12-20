@@ -1,0 +1,363 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  {{ parent() }}
+{% endblock %}
+
+{% block body %}
+  <!-- Header -->
+  <div class="header bg-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Inicio</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="{{ path('inicio') }}"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="{{ path('inicio') }}">Dashboards</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+        <!-- Card stats -->
+        {% block info %}
+          <div class="row	justify-content-md-center">
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Presupuesto pagado</h5>
+                      <span class="h2 font-weight-bold mb-0" id="nameTotalAPagar">{{ presupuestoPagado|number_format(2, '.', ',') }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                        <i class="ni ni-money-coins"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Presupuesto por pagar</h5>
+                      <span class="h2 font-weight-bold mb-0" id="namePorPagar">{{ presupuestoPorPagar|number_format(2, '.', ',') }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                        <i class="ni ni-chart-pie-35"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col-xl-7">
+        <div class="card">
+          <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase ls-1 mb-1">Gráfica</h6>
+                <h5 class="h3 text-default mb-0">Contrataciones por cargos</h5>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Chart -->
+            <div class="chart" id="graficoContratosCargos">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-5">
+        <div class="card">
+          <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-muted ls-1 mb-1">Gráfica</h6>
+                <h5 class="h3 mb-0">Categorías de proyectos</h5>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Chart -->
+            <div class="chart" id="graficoTiposProyectos">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% block footer %}
+      {{ parent() }}
+    {% endblock %}
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('easyadmin/plugins/highstock/code/highstock.js') }}"></script>
+  <script>
+    jQuery(document).ready(function () {
+
+      (function () {
+        {% if not (app.user.isActive) %}
+        window.location.href = "{{ path('login') }}";
+        {% endif %}
+      })();
+
+      //Declaracion de variables
+      var totalContratosCargos = [];
+      var totalCategoriasProyecto = [];
+
+      {% for graficoTotal in graficosTotalesCargosContratos %}
+      totalContratosCargos.push({
+        name: '{{ graficoTotal['nombre'] }}',
+        y: parseInt('{{ graficoTotal['cant'] }}')
+      });
+      {% endfor %}
+
+      {% for graficoTotal in graficosTotalCategoriasProyecto %}
+      totalCategoriasProyecto.push({
+        name: '{{ graficoTotal['nombre'] }}',
+        y: parseInt('{{ graficoTotal['cant'] }}')
+      });
+      {% endfor %}
+
+      (function () {
+        graficoTotalCargosContrataciones();
+        graficoTotalCategoriasProyecto();
+      })();
+
+      function graficoTotalCargosContrataciones() {
+        var valorMax = totalContratosCargos.length - 1;
+        var valorScrollbar = false;
+        if (totalContratosCargos.length > 6) {
+          valorMax = 5;
+          valorScrollbar = true;
+        }
+        Highcharts.chart('graficoContratosCargos', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: null
+          },
+          exporting: {
+            enabled: false
+          },
+          scrollbar: {
+            enabled: valorScrollbar,
+            liveRedraw: true,
+            step: 1
+          },
+          xAxis: {
+            type: 'category',
+            min: 0,
+            max: valorMax,
+            useHTML: true
+          },
+          yAxis: {
+            title: {
+              text: 'Presupuesto Estimado',
+              useHTML: true
+            }
+
+          },
+          legend: {
+            enabled: false
+          },
+          plotOptions: {
+            series: {
+              borderWidth: 0,
+              allowPointSelect: true,
+              cursor: 'pointer',
+              getExtremesFromAll: true,
+              dataLabels: {
+                enabled: true,
+                formatter: function () {
+                  return Highcharts.numberFormat(this.y, 0, ',', '.');
+                }
+              }
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>' + ' presupuesto asignado ' + '<b>{point.y:,.0f}</b>'
+          },
+
+          "series": [
+            {
+              "name": "Cargos",
+              "colorByPoint": true,
+              "data": totalContratosCargos
+            }
+          ],
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 800
+              },
+              chartOptions: {
+                scrollbar: {
+                  enabled: true
+                },
+                xAxis: {
+                  min: 0,
+                  max: 1,
+                  useHTML: true
+                }
+              }
+            }]
+          }
+        });
+      }
+
+      function graficoTotalCategoriasProyecto1() {
+
+        Highcharts.chart('graficoTiposProyectos', {
+          chart: {
+            type: 'column'
+          },
+          title: {
+            text: null
+          },
+          exporting: {
+            enabled: false
+          },
+          scrollbar: {
+            enabled: false,
+            liveRedraw: true,
+            step: 1
+          },
+          xAxis: {
+            type: 'category',
+            min: 0,
+            max: 5,
+            useHTML: true
+          },
+          yAxis: {
+            title: {
+              text: 'Contrataciones',
+              useHTML: true
+            }
+
+          },
+          legend: {
+            enabled: false
+          },
+          plotOptions: {
+            series: {
+              borderWidth: 0,
+              allowPointSelect: true,
+              cursor: 'pointer',
+              getExtremesFromAll: true,
+              dataLabels: {
+                enabled: true,
+                formatter: function () {
+                  return Highcharts.numberFormat(this.y, 0, ',', '.');
+                }
+              }
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>' + ' presupuesto asignado ' + '<b>{point.y:,.0f}</b>'
+          },
+
+          "series": [
+            {
+              "name": "Categorías",
+              "colorByPoint": true,
+              "data": totalCategoriasProyecto
+            }
+          ],
+          responsive: {
+            rules: [{
+              condition: {
+                maxWidth: 800
+              },
+              chartOptions: {
+                scrollbar: {
+                  enabled: true
+                },
+                xAxis: {
+                  min: 0,
+                  max: 1,
+                  useHTML: true
+                }
+              }
+            }]
+          }
+        });
+      }
+
+      function graficoTotalCategoriasProyecto() {
+        Highcharts.chart('graficoTiposProyectos', {
+          chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+          },
+          title: {
+            text: null
+          },
+          exporting: {
+            enabled: false
+          },
+          tooltip: {
+            pointFormat: '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+                    'Cantidad de categorías: <b>{point.y}</b><br/>' +
+                    'que representa el <b>{point.percentage:.1f}%</b>'
+          },
+          legend: {
+            layaout: 'horizontal',
+            alignColumns: false,
+            align: 'center',
+            margin: -10
+          },
+          plotOptions: {
+            pie: {
+              dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.y:.0f}',
+              }
+            }
+          },
+          series: [{
+            minPointSize: 10,
+            zMin: 0,
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: false
+            },
+            showInLegend: true,
+            name: 'Expedientes',
+            colorByPoint: true,
+            data: totalCategoriasProyecto
+          }]
+        });
+      }
+
+    });
+  </script>
+{% endblock %}
+
+

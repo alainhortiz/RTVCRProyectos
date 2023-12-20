@@ -1,0 +1,175 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Header -->
+    <div class="header bg-warning pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                {% block info %}
+                    <div class="row	justify-content-md-center">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card card-stats">
+                                <!-- Card body -->
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Presupuesto
+                                                pagado</h5>
+                                            <span class="h2 font-weight-bold mb-0"
+                                                  id="nameTotalAPagar">{{ presupuestoPagado|number_format(2, '.', ',') }}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+                                                <i class="ni ni-money-coins"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card card-stats">
+                                <!-- Card body -->
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Presupuesto por
+                                                pagar</h5>
+                                            <span class="h2 font-weight-bold mb-0"
+                                                  id="namePorPagar">{{ presupuestoPorPagar|number_format(2, '.', ',') }}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-gradient-orange text-white rounded-circle shadow">
+                                                <i class="ni ni-chart-pie-35"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="card card-stats">
+                                <!-- Card body -->
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h5 class="card-title text-uppercase text-muted mb-0">Programas por
+                                                reportar</h5>
+                                            <span class="h2 font-weight-bold mb-0">{{ programasRestantes }}</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                                                <i class="ni ni-active-40"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Reportes del Proyecto {{ proyecto.titulo }} </h3>
+                        <div class="col-lg-12 col-12 text-right">
+                            {% if programasRestantes !=0 %}
+                                <a href="{{ path('addReporte',{idProyecto:proyecto.id}) }}"
+                                   class="btn btn-sm btn-default">Nuevo</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Light table -->
+                    <div class="table-responsive">
+                        <table class="table align-items-center table-flush" id="dataReportes">
+                            <thead style="color: white" class="header bg-warning">
+                            <tr>
+                                <th scope="col" class="text-center">No. Reporte</th>
+                                <th scope="col" class="text-center">Fecha</th>
+                                <th scope="col" class="text-center">Cantidad de Programas</th>
+                                <th scope="col" class="text-center">Trabajaron</th>
+                                <th scope="col" class="text-center">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody class="list">
+                            {% for reporte in reportes %}
+                                <tr data-id="{{ reporte.id }}">
+                                    <td class="text-center">{{ reporte.noReporte }}</td>
+                                    <td class="text-center">{{ reporte.fechaReporte|date('d-m-Y') }}</td>
+                                    <td class="text-center">{{ reporte.cantidadProgramas }}</td>
+                                    <td class="text-center">{{ reporte.cantidadParticipantes }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ path('verReporte',{idReporte:reporte.id}) }}"
+                                           class="btn btn-sm btn-secondary btn-icon-only rounded-circle verReporte"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="Ver reporte">
+                                                                                 <span class="btn-inner--icon"><i
+                                                                                             class="fas fa-eye"></i></span>
+                                        </a>
+                                        {% if reporte.isConcluido != 1 %}
+                                            <a href="{{ path('editReporte',{idReporte:reporte.id}) }}"
+                                               class="btn btn-sm btn-info btn-icon-only rounded-circle"
+                                               data-toggle="tooltip"
+                                               data-placement="left"
+                                               title="Modificar reporte">
+                                                <span class="btn-inner--icon"><i class="fas fa-edit"></i></span></a>
+                                        {% endif %}
+                                        <a href="{{ path('exportarReporte',{idReporte:reporte.id}) }}"
+                                           class="btn btn-sm btn-primary btn-icon-only rounded-circle"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="Exportar a Excel">
+                                                                                 <span class="btn-inner--icon"><i
+                                                                                             class="fas fa-file-excel"></i></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function(){
+                {% if not (is_granted("ROLE_REPORTE") or is_granted("ROLE_SUPERUSUARIO")) %}
+                    window.location.href = "{{ path('login') }}";
+                {% endif %}
+            })();
+
+            $('#dataReportes').DataTable({
+                "lengthChange": false,
+                "lengthMenu": [[10], [10]]
+            });
+
+
+        });
+
+    </script>
+{% endblock %}
+

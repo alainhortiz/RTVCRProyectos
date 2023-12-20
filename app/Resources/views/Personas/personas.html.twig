@@ -1,0 +1,783 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/plugins/multiselect/css/multi-select.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4" id="formHeader">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 text-white d-inline-block mb-0">Personas</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="{{ path('inicio') }}"><i
+                                                class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item"><a href="{{ path('gestionarPersonas') }}">Personas</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Personas</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6 ">
+        <div class="row justify-content-center" id="formBuscar">
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="card card-user justify-content-center">
+                    <div class="card-header">
+                        <h2 class="card-title text-info font-weight-bold mb-4">Localizar Personas</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <!-- Tabs with icons -->
+                                    <div class="card shadow">
+                                        <div class="card-body" style="background: #fdfdfd">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-11 col-10 pr-1">
+                                                        <div class="form-group">
+                                                            <label for="carnetIdentidad">CI</label>
+                                                            <input type="text"
+                                                                   class="form-control input-number"
+                                                                   maxlength="11"
+                                                                   placeholder="Teclee el Carnet de Identidad"
+                                                                   id="carnetIdentidad" name="carnetIdentidad">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1 col-1 pr-1" style="padding-top: 35px">
+                                                        <button disabled
+                                                                class="btn btn-primary btn-icon-only rounded-circle"
+                                                                type="button" id="btnBuscar" name="btnBuscar"
+                                                                data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                title="Localizar persona">
+                                                                <span class="btn-inner--icon"><i
+                                                                            class="fas fa-search"></i></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row hidden" id="formAdicionar">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card card-user">
+                    <div class="card-header">
+                        <h2 class="card-title text-info font-weight-bold mb-4" id="nameAddCI">NUEVA PERSONA CI: </h2>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-body" style="background: #fdfdfd">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <!-- Tabs with icons -->
+                                    <div class="nav-wrapper">
+                                        <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text"
+                                            role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-1" role="tab"
+                                                   aria-controls="tabs-icons-text-1" aria-selected="true"><i
+                                                            class="ni ni-cloud-upload-96 mr-2"></i>Generales</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-2" role="tab"
+                                                   aria-controls="tabs-icons-text-2" aria-selected="false"><i
+                                                            class="fa fa-user mr-2 text-blue"></i>Personal Artístico</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-3" role="tab"
+                                                   aria-controls="tabs-icons-text-3" aria-selected="false"><i
+                                                            class="fa fa-user-check mr-2 text-blue"></i>Trabajador por
+                                                    cuenta propia</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card shadow">
+                                        <div class="card-body" style="background: #fdfdfd">
+                                            <div class="tab-content" id="myTabContent">
+                                                <div class="tab-pane fade show active" id="tabs-icons-text-1"
+                                                     role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addNombre">Nombre</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el nombre" id="addNombre"
+                                                                       name="addNombre">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addPrimerApellido">Primer Apellido</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el primer apellido"
+                                                                       id="addPrimerApellido"
+                                                                       name="addPrimerApellido">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addSegundoApellido">Segundo Apellido</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el segundo apellido"
+                                                                       id="addSegundoApellido"
+                                                                       name="addSegundoApellido">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-1 col-md-1 col-12 pr-1"
+                                                             style="padding-top: 40px">
+                                                            <div class="form-group">
+                                                                <div class="md-checkbox">
+                                                                    <input type="checkbox" id="addNIT" class="md-check">
+                                                                    <label for="addNIT">
+                                                                        <span></span>
+                                                                        <span class="check"></span>
+                                                                        <span class="box"></span>
+                                                                        NIT </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addSexo">Sexo</label>
+                                                                <select class="form-control" id="addSexo"
+                                                                        name="addSexo">
+                                                                    <option value="0">Seleccione...</option>
+                                                                    {% for sexo in  sexos %}
+                                                                        <option value="{{ sexo.id }}">{{ sexo.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addAlias">Conocido por</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el alias" id="addAlias"
+                                                                       name="addAlias">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addCiudadania">Ciudadanía</label>
+                                                                <select class="form-control" id="addCiudadania"
+                                                                        name="addCiudadania">
+                                                                    <option value="0">Seleccione ...</option>
+                                                                    {% for ciudadania in  ciudadanias %}
+                                                                        <option value="{{ ciudadania.id }}">{{ ciudadania.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addTelefono">Teléfono</label>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Teclee el teléfono" id="addTelefono"
+                                                                       name="addTelefono">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-12 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="addDireccion">Dirección</label>
+                                                                <textarea class="form-control textarea"
+                                                                          id="addDireccion" name="addDireccion"
+                                                                          placeholder="Teclee la dirección"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-2-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addProfesion">Profesión</label>
+                                                                        <select class="form-control" id="addProfesion"
+                                                                                name="addProfesion">
+                                                                            <option value="0">Seleccione ...</option>
+                                                                            {% for profesion in  profesiones %}
+                                                                                <option value="{{ profesion.id }}">{{ profesion.nombre }}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNoRegistro">No. Registro del
+                                                                            Creador</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el registro"
+                                                                               id="addNoRegistro"
+                                                                               name="addNoRegistro">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label "
+                                                                               for="multi-cargos"><strong>Seleccione
+                                                                                los conceptos:</strong></label>
+                                                                        <select multiple="multiple" id="multi-cargos"
+                                                                                name="multi-cargos"
+                                                                                class="form-control">
+                                                                            {% for cargo in cargos %}
+                                                                                {% if cargo.isServicio != 1 %}
+                                                                                    <option value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-3-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNoLicencia">No. Licencia</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de licencia"
+                                                                               id="addNoLicencia"
+                                                                               name="addNoLicencia">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-8 col-md-8 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addTituloLicencia">Título
+                                                                            Licencia</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el título de la licencia"
+                                                                               id="addTituloLicencia"
+                                                                               name="addTituloLicencia">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-6 col-md-6 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNoCuentaCUP">No. Cuenta
+                                                                            CUP</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de cuenta CUP"
+                                                                               id="addNoCuentaCUP"
+                                                                               name="addNoCuentaCUP">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6 col-md-6 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNoCuentaCUC">No. Cuenta
+                                                                            CUC</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de cuenta CUC"
+                                                                               id="addNoCuentaCUC"
+                                                                               name="addNoCuentaCUC">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addBanco">Banco</label>
+                                                                        <select class="form-control" id="addBanco"
+                                                                                name="addBanco">
+                                                                            <option value="0">Seleccione ...</option>
+                                                                            {% for banco in  bancos %}
+                                                                                <option value="{{ banco.id }}">{{ banco.nombre }}</option>
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNoSucursal">No. Sucursal</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de Sucursal"
+                                                                               id="addNoSucursal"
+                                                                               name="addNoSucursal">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNoLicenciaSanitaria">No. Licencia
+                                                                            Sanitaria</label>
+                                                                        <input type="text" class="form-control"
+                                                                               placeholder="Teclee el no. de licencia sanitaria"
+                                                                               id="addNoLicenciaSanitaria"
+                                                                               name="addNoLicenciaSanitaria">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-12 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label "
+                                                                               for="multi-servicios"><strong>Seleccione
+                                                                                los servicios:</strong></label>
+                                                                        <select multiple="multiple" id="multi-servicios"
+                                                                                name="multi-servicios"
+                                                                                class="form-control">
+                                                                            {% for cargo in cargos %}
+                                                                                {% if cargo.isServicio == 1 %}
+                                                                                    <option value={{ cargo.id }}>{{ cargo.nombre }}</option>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="button" class="btn btn-primary btn-round" id="btnAddGuardar"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Guardar la persona">Aceptar
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-round" id="btnAddCancelar"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Salir">Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="containerResultado"></div>
+    </div>
+    {% block footer %}
+        {{ parent() }}
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('easyadmin/plugins/multiselect/js/jquery.multi-select.js') }}"></script>
+    <script src="{{ asset('easyadmin/plugins/quicksearch/src/jquery.quicksearch.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function () {
+                {% if not (is_granted("ROLE_PERSONA") or is_granted("ROLE_SUPERUSUARIO")) %}
+                window.location.href = "{{ path('login') }}";
+                {% else %}
+                {% for nivel in app.user.nivelAccesos() if nivel == 'PERSONA' %}
+                {% else %}
+                window.location.href = "{{ path('login') }}";
+                {% endfor %}
+                {% endif %}
+            })();
+
+            //Declaración de componentes
+            $('#multi-cargos, #multi-servicios').multiSelect({
+                selectableHeader: "<input type='text' class='search-input input-lg' autocomplete='off' placeholder='Buscar'>",
+                selectionHeader: "<input type='text' class='search-input input-lg' autocomplete='off' placeholder='Buscar'>",
+                afterInit: function (ms) {
+                    var that = this,
+                        $selectableSearch = that.$selectableUl.prev(),
+                        $selectionSearch = that.$selectionUl.prev(),
+                        selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                        selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                        .on('keydown', function (e) {
+                            if (e.which === 40) {
+                                that.$selectableUl.focus();
+                                return false;
+                            }
+                        });
+
+                    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                        .on('keydown', function (e) {
+                            if (e.which == 40) {
+                                that.$selectionUl.focus();
+                                return false;
+                            }
+                        });
+                },
+                afterSelect: function () {
+                    this.qs1.cache();
+                    this.qs2.cache();
+                },
+                afterDeselect: function () {
+                    this.qs1.cache();
+                    this.qs2.cache();
+                }
+            });
+
+
+            //Declaración de variables
+            var carnetIdentidad;
+
+            {% if  (app.session.get('noCarnet') !='' ) %}
+            $('#carnetIdentidad').val('{{ app.session.get('noCarnet') }}');
+            {{ app.session.set('noCarnet','') }}
+            buscarPersona();
+            {% endif %}
+
+            //Formulario Buscar persona
+            $('#carnetIdentidad').on("keyup", function () {
+
+                if ($('#carnetIdentidad').val().trim().length === 11) {
+                    $('#btnBuscar').prop("disabled", false);
+                } else {
+                    $('#btnBuscar').prop("disabled", true);
+                }
+            });
+
+            $('#btnBuscar').on('click', function () {
+                buscarPersona();
+            });
+
+            function buscarPersona() {
+                if ($("#carnetIdentidad").val() !== '') {
+
+                    $("#containerResultado").addClass('hidden');
+
+                    carnetIdentidad = $("#carnetIdentidad").val();
+                    var mat_datos = {carnetIdentidad: carnetIdentidad};
+
+                    $(".preload").removeClass('hidden');
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: "html",
+                        url: '{{ path("localizarPersona") }}',
+                        data: mat_datos
+                    }).done(function (data) {
+
+                        $(".preload").addClass('hidden');
+
+                        if (data.indexOf('dataPersonas') !== -1) {
+
+                            $('#containerResultado').replaceWith(data);
+                            $('#containerResultado').removeClass('hidden');
+
+                        } else {
+                            alertify.confirm('Basic: false').set('message', '<strong>Este carnet no está registrado, desea registrarlo?</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                                .set('onok', function () {
+                                    limpiarAdicionar();
+                                    $("#containerResultado").addClass('hidden');
+                                    $("#formHeader").addClass('hidden');
+                                    $("#formBuscar").addClass('hidden');
+                                    $('#nameAddCI').text("NUEVA PERSONA CI: " + carnetIdentidad);
+                                    $("#formAdicionar").removeClass('hidden');
+                                    $("#addSexo").val(genero(carnetIdentidad));
+                                    $("#addCiudadania").val('1');
+
+                                    /*var enlace = "{#{{ path('addPersona', {noCarnetIdentidad:'id'}) }}#}";
+                                var ruta = enlace.replace('id',carnetIdentidad);
+                                window.location.href = ruta;*/
+
+                                });
+                        }
+                    });
+
+                }
+            }
+
+            //Formulario Adicionar persona
+
+            $('#btnAddCancelar').on('click', function () {
+                $("#formAdicionar").addClass('hidden');
+                $("#formHeader").removeClass('hidden');
+                $("#formBuscar").removeClass('hidden');
+            });
+
+            $('#btnAddGuardar').on('click', function () {
+
+                //Validaciones
+                if ($("#addNombre").val() === '') {
+                    alertify.alert('<strong>El nombre es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addPrimerApellido").val() === '') {
+                    alertify.alert('<strong>El primer apellido es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addSegundoApellido").val() === '') {
+                    alertify.alert('<strong>El segundo apellido es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addDireccion").val() === '') {
+                    alertify.alert('<strong>La dirección es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#addCiudadania").val() === '0') {
+                    alertify.alert('<strong>La ciudadanía es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                var isPA = 0;
+                var isTCP = 0;
+                var noLicencia = 0;
+                var noLicenciaSanitaria = 0;
+
+                if (($('#ms-multi-cargos li.ms-elem-selectable ').hasClass('ms-selected'))) {
+                    isPA = 1;
+                }
+
+                if (($('#ms-multi-servicios li.ms-elem-selectable ').hasClass('ms-selected'))) {
+                    isTCP = 1;
+                    noLicencia = $("#addNoLicencia").val();
+                    $('#ms-multi-servicios li.ms-elem-selectable ').each(function () {
+                        if ($(this).hasClass('ms-selected')) {
+                            if ($(this).text() === 'Alimentación') {
+                                noLicenciaSanitaria = $(this).text();
+                            }
+                        }
+                    });
+                }
+
+                var nit = 0;
+                if ($('#addNIT').prop('checked')) {
+                    nit = 1;
+                }
+
+                if (isPA === 0 && isTCP === 0) {
+                    alertify.alert('<strong>Debe definir si la persona es personal artístico ó trabajador por cuenta propia.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                //Si es PA
+                if (isPA === 1) {
+                    if ($("#addProfesion").val() === '0') {
+                        alertify.alert('<strong>La profesión es obligatoria, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+                }
+                //Si es cuenta propista
+                if (isTCP === 1) {
+
+                    if ($("#addNoLicencia").val() === 0) {
+                        alertify.alert('<strong>El no. licencia es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#addTituloLicencia").val() === '') {
+                        alertify.alert('<strong>El título de la licencia es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#addNoCuentaCUP").val() === '') {
+                        alertify.alert('<strong>El no. de cuenta en CUP es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#addNoCuentaCUC").val() === '') {
+                        alertify.alert('<strong>El no. de cuenta en CUC es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#addBanco").val() === '0') {
+                        alertify.alert('<strong>El banco es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if ($("#addNoSucursal").val() === '') {
+                        alertify.alert('<strong>El no. de sucursal es obligatorio, no puede quedar en blanco.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }
+
+                    if (noLicenciaSanitaria !== 0) {
+                        if ($("#addNoLicenciaSanitaria").val() === '') {
+                            alertify.alert('<strong>El no. de licencia sanitaria es obligatorio, no puede quedar en blanco.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                                .set('label', 'Aceptar');
+                            return false;
+                        }
+                    }
+
+                }
+
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    cI: carnetIdentidad,
+                    nombre: $("#addNombre").val(),
+                    primerApellido: $("#addPrimerApellido").val(),
+                    segundoApellido: $("#addSegundoApellido").val(),
+                    profesion: $("#addProfesion").val(),
+                    ciudadania: $("#addCiudadania").val(),
+                    direccion: $("#addDireccion").val(),
+                    alias: $("#addAlias").val(),
+                    sexo: $("#addSexo").val(),
+                    telefono: $("#addTelefono").val(),
+                    cargos: $("#multi-cargos").val(),
+                    servicios: $("#multi-servicios").val(),
+                    nit: nit,
+                    noRegistro: $("#addNoRegistro").val(),
+                    noLicencia: noLicencia,
+                    tituloLicencia: $("#addTituloLicencia").val(),
+                    noCuentaCUP: $("#addNoCuentaCUP").val(),
+                    noCuentaCUC: $("#addNoCuentaCUC").val(),
+                    banco: $("#addBanco").val(),
+                    noSucursal: $("#addNoSucursal").val(),
+                    noLicenciaSanitaria: $("#addNoLicenciaSanitaria").val(),
+                    isPA: isPA,
+                    isTCP: isTCP
+                };
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("insertPersona") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+
+                    if (data.indexOf('dataPersonas') !== -1) {
+
+                        $('#containerResultado').replaceWith(data);
+                        $("#containerResultado").removeClass('hidden');
+                        limpiarAdicionar();
+                        $("#formAdicionar").addClass('hidden');
+                        $("#formHeader").removeClass('hidden');
+                        $("#formBuscar").removeClass('hidden');
+
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+            function limpiarAdicionar() {
+                $("#carnetIdentidad").val('');
+                $("#addNombre").val('');
+                $("#addPrimerApellido").val('');
+                $("#addSegundoApellido").val('');
+                $("#addCategoria").val(0);
+                $("#addProfesion").val(0);
+                $("#addCiudadania").val(0);
+                $("#addDireccion").val('');
+                $("#addAlias").val('');
+                $("#addSexo").val(0);
+                $("#addTelefono").val('');
+                $("#addNoLicencia").val('');
+                $("#addNoRegistro").val('');
+                $('#addNIT').prop("checked", false);
+                $('.ms-list .ms-elem-selectable').each(function () {
+                    $(this).css('display', 'list-item').removeClass('ms-selected');
+                });
+
+                $('.ms-list .ms-elem-selection').each(function () {
+                    $(this).css('display', 'none').addClass('ms-hover').removeClass('ms-selected');
+                });
+                $("#multi-cargos").val('');
+                $("#multi-servicios").val('')
+            }
+
+            function genero(cadena){
+                 var resultado ='';
+                if ((cadena.substring(9,10)%2) === 0 ) {
+                    resultado = '1';
+                }else {
+                    resultado = '2';
+                }
+                return resultado;
+            }
+
+        });
+
+    </script>
+{% endblock %}
+

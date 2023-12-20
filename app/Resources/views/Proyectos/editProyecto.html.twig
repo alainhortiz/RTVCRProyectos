@@ -1,0 +1,1392 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('easyadmin/tema/DataTables-1.10.10/media/css/jquery.dataTables.css') }}"/>
+{% endblock %}
+
+{% block body %}
+    <!-- Alerta -->
+    <div class="preload hidden">
+        <div class="logo"></div>
+        <div class="loader-frame">
+            <div class="loader1" id="loader1"></div>
+            <div class="loader2" id="loader2"></div>
+        </div>
+    </div>
+    <!-- Header -->
+    <div class="header bg-primary pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <!-- Card stats -->
+            </div>
+        </div>
+    </div>
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card card-user">
+                    <div class="card-header">
+                        <h2 class="card-title text-info font-weight-bold mb-4" id="nameProyecto">Modificar No. Contrato
+                            Canal: {{ proyecto.noContratoCanal ~ ' -' ~ ' ' ~ proyecto.titulo }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <!-- Tabs with icons -->
+                                    <div class="nav-wrapper">
+                                        <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-icons-text"
+                                            role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-icons-text-1-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-1" role="tab"
+                                                   aria-controls="tabs-icons-text-1" aria-selected="true"><i
+                                                            class="ni ni-single-copy-04 mr-2"></i>Generales</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-2-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-2" role="tab"
+                                                   aria-controls="tabs-icons-text-2" aria-selected="false"><i
+                                                            class="ni ni-single-02 mr-2"></i>Contrataciones al personal
+                                                    artístico</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-icons-text-3-tab"
+                                                   data-toggle="tab" href="#tabs-icons-text-3" role="tab"
+                                                   aria-controls="tabs-icons-text-3" aria-selected="false"><i
+                                                            class="ni ni-single-02 mr-2"></i>Contrataciones a los
+                                                    trabajadores por cuenta propia</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card shadow">
+                                        <div class="card-body" style="background: #fdfdfd">
+                                            <div class="tab-content" id="myTabContent">
+                                                <div class="tab-pane fade show active" id="tabs-icons-text-1"
+                                                     role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label for="editContratoCanal">No. Contrato</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="editContratoCanal"
+                                                                       name="editContratoCanal"
+                                                                       value="{{ proyecto.noContratoCanal }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-10">
+                                                            <div class="form-group">
+                                                                <label for="editNombreDirector">Director
+                                                                    General</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="editNombreDirector"
+                                                                       name="editNombreDirector"
+                                                                       value="{{ proyecto.nombresDirectorGeneral }}"
+                                                                       readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 col-1 pl-1" style="padding-top: 35px">
+                                                            <button class="btn btn-primary btn-icon-only rounded-circle"
+                                                                    type="button" id="btnEditDirector"
+                                                                    name="btnEditDirector" data-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title="Modificar Director">
+                                                                <span class="btn-inner--icon"><i
+                                                                            class="fas fa-plus"></i></span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-md-4 col-10">
+                                                            <div class="form-group">
+                                                                <label for="editNombreProductor">Productor
+                                                                    General</label>
+                                                                <input type="text" class="form-control"
+                                                                       id="editNombreProductor"
+                                                                       name="editNombreProductor"
+                                                                       value="{{ proyecto.nombresProductorGeneral }}"
+                                                                       readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 col-1 pl-1" style="padding-top: 35px">
+                                                            <button class="btn btn-primary btn-icon-only rounded-circle"
+                                                                    type="button" id="btnEditProductor"
+                                                                    name="btnEditProductor"
+                                                                    data-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title="Modificar Productor">
+                                                                <span class="btn-inner--icon"><i
+                                                                            class="fas fa-plus"></i></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label for="editTitulo">Título</label>
+                                                                <input type="text"
+                                                                       class="form-control"
+                                                                       id="editTitulo"
+                                                                       name="editTitulo" value="{{ proyecto.titulo }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-5 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editFormatoProyecto">Formato</label>
+                                                                <select
+                                                                        class="form-control"
+                                                                        id="editFormatoProyecto"
+                                                                        name="editFormatoProyecto">
+                                                                    <option value="{{ proyecto.formato.id }}">{{ proyecto.formato.nombre }}</option>
+                                                                    {% for formato in  formatosProyectos %}
+                                                                        <option value="{{ formato.id }}">{{ formato.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 px-1">
+                                                            <div class="form-group">
+                                                                <label>Cantidad de emisiones</label>
+                                                                <label for="editEmisiones"></label><input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        id="editEmisiones"
+                                                                        name="editEmisiones"
+                                                                        min="1" value="{{ proyecto.emisiones }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-1">
+                                                            <div class="form-group">
+                                                                <label for="editTiempoPantalla">Tiempo en
+                                                                    pantalla</label><input
+                                                                        type="number" class="form-control"
+                                                                        id="editTiempoPantalla"
+                                                                        name="editTiempoPantalla" min="1"
+                                                                        value="{{ proyecto.tiempoPantalla }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4 pr-1">
+                                                            <div class="form-group">
+                                                                <label>Categoría</label>
+                                                                <label for="editTipoProyecto"></label><select
+                                                                        class="form-control"
+                                                                        id="editTipoProyecto"
+                                                                        name="editTipoProyecto">
+                                                                    <option value="{{ proyecto.tipo.id }}">{{ proyecto.tipo.nombre }}</option>
+                                                                    {% for tipo in  tiposProyectos %}
+                                                                        <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-1">
+                                                            <div class="form-group">
+                                                                <label for="editFechaInicio">Fecha de
+                                                                    inicio</label><input
+                                                                        type="date"
+                                                                        class="form-control"
+                                                                        min="2020-01-01"
+                                                                        step="1"
+                                                                        id="editFechaInicio"
+                                                                        name="editFechaInicio"
+                                                                        value="{{ proyecto.fechaInicio|date('Y-m-d') }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-1">
+                                                            <div class="form-group">
+                                                                <label for="editFechaFinal">Fecha de terminación</label><input
+                                                                        type="date"
+                                                                        class="form-control"
+                                                                        min="2020-01-01"
+                                                                        step="1"
+                                                                        id="editFechaFinal"
+                                                                        name="editFechaFinal"
+                                                                        value="{{ proyecto.fechaTerminacion|date('Y-m-d') }}" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4 pr-1">
+                                                            <div class="form-group">
+                                                                <label for="editPreFilmacion">Etapa
+                                                                    Pre-Filmación</label><input
+                                                                        type="number" class="form-control"
+                                                                        id="editPreFilmacion"
+                                                                        name="editPreFilmacion"
+                                                                        value="{{ proyecto.etapaPreFilmacion }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 px-1">
+                                                            <div class="form-group">
+                                                                <label for="editFilmacion">Etapa Filmación</label><input
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        id="editFilmacion"
+                                                                        name="editFilmacion"
+                                                                        value="{{ proyecto.etapaFilmacion }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 pl-1">
+                                                            <div class="form-group">
+                                                                <label for="editPostFilmacion">Etapa
+                                                                    Post-Filmación</label><input
+                                                                        type="number" class="form-control"
+                                                                        id="editPostFilmacion"
+                                                                        name="editPostFilmacion"
+                                                                        value="{{ proyecto.etapaPostFilmacion }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label for="editDescripcion">Descripción</label><textarea
+                                                                        class="form-control textarea"
+                                                                        id="editDescripcion"
+                                                                        name="editDescripcion">{{ proyecto.descripcion }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-2-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-3 col-10 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNombrePA">Nombres</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="addNombrePA"
+                                                                               name="addNombrePA" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1 col-1 pr-1"
+                                                                     style="padding-top: 35px">
+                                                                    <button class="btn btn-primary btn-icon-only rounded-circle"
+                                                                            type="button" id="btnAddPersonaPA"
+                                                                            name="btnAddPersonaPA" data-toggle="tooltip"
+                                                                            data-placement="top"
+                                                                            title="Localizar Persona">
+                                                                <span class="btn-inner--icon"><i
+                                                                            class="fas fa-plus"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-3 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addConcepto">Por
+                                                                            Concepto</label><select
+                                                                                class="form-control" id="addConcepto"
+                                                                                name="addConcepto" disabled>
+                                                                            <option id="inicio" value="0">Seleccione
+                                                                                ...
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addPresupuestoCargoPA">Por
+                                                                            cargo</label><input
+                                                                                type="text"
+                                                                                class="form-control input-number"
+                                                                                placeholder=""
+                                                                                id="addPresupuestoCargoPA"
+                                                                                name="addPresupuestoCargoPA" disabled>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 col-10 px-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addPresupuestoOtroIngresoPA">Otros
+                                                                            ingresos</label><input
+                                                                                type="text"
+                                                                                class="form-control input-number"
+                                                                                placeholder=""
+                                                                                id="addPresupuestoOtroIngresoPA"
+                                                                                name="addPresupuestoOtroIngresoPA"
+                                                                                disabled>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1 col-1 pl-1"
+                                                                     style="padding-top: 35px">
+                                                                    <button class="btn btn-primary btn-icon-only rounded-circle"
+                                                                            type="button" id="btnAddPersonaContratadaPA"
+                                                                            name="btnAddPersonaContratadaPA"
+                                                                            data-toggle="tooltip"
+                                                                            data-placement="top"
+                                                                            title="Agregar persona" disabled>
+                                                                <span class="btn-inner--icon"><i
+                                                                            class="fas fa-plus"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="table-responsive">
+                                                                    <table class="table align-items-center table-flush"
+                                                                           id="dataPA">
+                                                                        <thead style="background: #1c345d;color: white">
+                                                                        <tr>
+                                                                            <th scope="col">No.</th>
+                                                                            <th scope="col">CI</th>
+                                                                            <th scope="col">Nombres</th>
+                                                                            <th scope="col">Concepto</th>
+                                                                            <th scope="col" class="text-center">Por
+                                                                                cargo
+                                                                            </th>
+                                                                            <th scope="col" class="text-center">Otros
+                                                                                ingresos
+                                                                            </th>
+                                                                            <th scope="col" class="text-center">Total a
+                                                                                cobrar
+                                                                            </th>
+                                                                            <th scope="col" class="text-center">Valor
+                                                                                por programa
+                                                                            </th>
+                                                                            <th scope="col" class="text-center">
+                                                                                Acciones
+                                                                            </th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody class="list">
+                                                                        {% for proye in proyecto.proyectosPersonasCargos() if proye.isPA == true %}
+                                                                            <tr data-id="{{ proye.id }}">
+                                                                                <td>{{ proye.noContrato }}</td>
+                                                                                <td>{{ proye.persona.carnetIdentidad }}</td>
+                                                                                <td>{{ proye.persona.nombreCompleto }}</td>
+                                                                                <td>{{ proye.cargo.nombre }}</td>
+                                                                                <td class="text-center">{{ proye.presupuestoCargo|number_format(2, '.', ',') }}</td>
+                                                                                <td class="text-center">{{ proye.presupuestoOtroIngreso|number_format(2, '.', ',') }}</td>
+                                                                                <td class="text-center">{{ proye.presupuestoTotal|number_format(2, '.', ',') }}</td>
+                                                                                <td class="text-center">{{ proye.valorPrograma|number_format(2, '.', ',') }}</td>
+                                                                                <td class="text-center">
+                                                                                    {% if proye.cantidadReportes() == 0 %}
+                                                                                        <button class="btn btn-sm btn-danger btn-icon-only rounded-circle borrarContratoPA"
+                                                                                                type="button"
+                                                                                                data-toggle="tooltip"
+                                                                                                data-placement="top"
+                                                                                                title="Eliminar"><span
+                                                                                                    class="btn-inner--icon"><i
+                                                                                                        class="fas fa-trash"></i></span>
+                                                                                        </button>
+                                                                                    {% endif %}
+                                                                                </td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel"
+                                                     aria-labelledby="tabs-icons-text-3-tab">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="row">
+                                                                <div class="col-md-3 col-10 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addNombreTCP">Nombres</label>
+                                                                        <input type="text" class="form-control"
+                                                                               id="addNombreTCP"
+                                                                               name="addNombreTCP" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1 col-1 pr-1"
+                                                                     style="padding-top: 35px">
+                                                                    <button class="btn btn-primary btn-icon-only rounded-circle"
+                                                                            type="button" id="btnAddPersonaTCP"
+                                                                            name="btnAddPersonaTCP"
+                                                                            data-toggle="tooltip"
+                                                                            data-placement="top"
+                                                                            title="Localizar Persona">
+                                                                <span class="btn-inner--icon"><i
+                                                                            class="fas fa-plus"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-3 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addServicio">Por
+                                                                            Servicio</label><select
+                                                                                class="form-control" id="addServicio"
+                                                                                name="addServicio" disabled>
+                                                                            <option id="inicio2" value="0">Seleccione
+                                                                                ...
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2 pr-1">
+                                                                    <div class="form-group">
+                                                                        <label for="addPresupuestoCargoTCP">Por
+                                                                            cargo</label><input
+                                                                                type="text"
+                                                                                class="form-control input-number"
+                                                                                placeholder=""
+                                                                                id="addPresupuestoCargoTCP"
+                                                                                name="addPresupuestoCargoTCP" disabled>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1 col-1 pl-1"
+                                                                     style="padding-top: 35px">
+                                                                    <button class="btn btn-primary btn-icon-only rounded-circle"
+                                                                            type="button"
+                                                                            id="btnAddPersonaContratadaTCP"
+                                                                            name="btnAddPersonaContratadaTCP"
+                                                                            data-toggle="tooltip"
+                                                                            data-placement="top"
+                                                                            title="Agregar persona" disabled>
+                                                                <span class="btn-inner--icon"><i
+                                                                            class="fas fa-plus"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="table-responsive">
+                                                                    <table class="table align-items-center table-flush"
+                                                                           id="dataTCP">
+                                                                        <thead style="background: #1c345d;color: white">
+                                                                        <tr>
+                                                                            <th scope="col">No.</th>
+                                                                            <th scope="col">CI</th>
+                                                                            <th scope="col">Nombres</th>
+                                                                            <th scope="col">Concepto</th>
+                                                                            <th scope="col" class="text-center">Por
+                                                                                cargo
+                                                                            </th>
+                                                                            <th scope="col" class="text-center">Total a
+                                                                                cobrar
+                                                                            </th>
+                                                                            <th scope="col" class="text-center">Valor
+                                                                                por programa
+                                                                            </th>
+                                                                            <th scope="col" class="text-center">
+                                                                                Acciones
+                                                                            </th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody class="list">
+                                                                        {% for proye in proyecto.proyectosPersonasCargos() if proye.isTCP == true %}
+                                                                            <tr data-id="{{ proye.id }}">
+                                                                                <td>{{ proye.noContrato }}</td>
+                                                                                <td>{{ proye.persona.carnetIdentidad }}</td>
+                                                                                <td>{{ proye.persona.nombreCompleto }}</td>
+                                                                                <td>{{ proye.cargo.nombre }}</td>
+                                                                                <td class="text-center">{{ proye.presupuestoCargo|number_format(2, '.', ',') }}</td>
+                                                                                <td class="text-center">{{ proye.presupuestoTotal|number_format(2, '.', ',') }}</td>
+                                                                                <td class="text-center">{{ proye.valorPrograma|number_format(2, '.', ',') }}</td>
+                                                                                <td class="text-center">
+                                                                                    {% if proye.cantidadReportes() == 0 %}
+                                                                                        <button class="btn btn-sm btn-danger btn-icon-only rounded-circle borrarContratoTCP"
+                                                                                                type="button"
+                                                                                                data-toggle="tooltip"
+                                                                                                data-placement="top"
+                                                                                                title="Eliminar"><span
+                                                                                                    class="btn-inner--icon"><i
+                                                                                                        class="fas fa-trash"></i></span>
+                                                                                        </button>
+                                                                                    {% endif %}
+                                                                                </td>
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="update ml-auto mr-auto">
+                                        <button type="button" class="btn btn-primary btn-round"
+                                                id="btnGuardar"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Guardar el proyecto">Aceptar
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-round"
+                                                id="btnCancelar"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="Salir">Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {{ include('Proyectos/modalBuscarDirector.html.twig') }}
+            {{ include('Proyectos/modalBuscarProductor.html.twig') }}
+            {{ include('Proyectos/modalBuscarPersona.html.twig') }}
+            {{ include('Proyectos/modalBuscarTCP.html.twig') }}
+        </div>
+        {% block footer %}
+            {{ parent() }}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- BEGIN GRAFICOS HIGHSTOCK LEVEL PLUGINS -->
+    <script src="{{ asset('easyadmin/plugins/highstock/code/highstock.js') }}"></script>
+    <!-- END  GRAFICOS HIGHSTOCK LEVEL PLUGINS -->
+    <script src="{{ asset('easyadmin/tema/DataTables-1.10.10/media/js/jquery.dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+
+            (function () {
+                {% if not (is_granted("ROLE_PROYECTO") or is_granted("ROLE_SUPERUSUARIO")) %}
+                window.location.href = "{{ path('login') }}";
+                {% else %}
+                {% for nivel in app.user.nivelAccesos() if nivel == 'PROYECTO' %}
+                {% else %}
+                window.location.href = "{{ path('login') }}";
+                {% endfor %}
+                {% endif %}
+            })();
+
+            //Declaración de variables
+            var carnetIdentidadDirector;
+            var carnetIdentidadProductor;
+            var carnetIdentidad;
+            var carnetIdentidadTCP;
+
+            var table = $('#dataPA').DataTable({
+                columns: [
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {
+                        defaultContent: '<button class="btn btn-sm btn-danger btn-icon-only rounded-circle borrarContratoPA" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><span class="btn-inner--icon"><i class="fas fa-trash"></i></span></button>',
+                        class: "text-center"
+                    }
+                ],
+                "lengthChange": false,
+                "scrollY": "400px",
+                "scrollCollapse": true,
+                "paging": false
+            });
+
+            var tableTCP = $('#dataTCP').DataTable({
+                columns: [
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {class: "text-center"},
+                    {
+                        defaultContent: '<button class="btn btn-sm btn-danger btn-icon-only rounded-circle borrarContratoTCP" type="button" data-toggle="tooltip" data-placement="top" title="Eliminar"><span class="btn-inner--icon"><i class="fas fa-trash"></i></span></button>',
+                        class: "text-center"
+                    }
+                ],
+                "lengthChange": false,
+                "scrollY": "400px",
+                "scrollCollapse": true,
+                "paging": false
+            });
+
+            //--------- abandonar el formulario -----------------
+            $('#btnCancelar').on('click', function () {
+                window.location.href = "{{ path('gestionarProyectos') }}";
+            });
+
+            //Formulario Buscar Director
+            $('#btnEditDirector').on('click', function () {
+                $('#carnetDirector').val('');
+                $('#modalBuscarDirector').modal('show');
+            });
+
+            $('#carnetDirector').on("keyup", function () {
+
+                if ($('#carnetDirector').val().trim().length === 11) {
+                    $('#btnBuscarDirector').prop("disabled", false);
+                } else {
+                    $('#btnBuscarDirector').prop("disabled", true);
+                }
+            });
+
+            $('#btnBuscarDirector').on('click', function () {
+                if ($("#carnetDirector").val() !== '') {
+
+                    $('#editNombreDirector').val('');
+                    carnetIdentidadDirector = $("#carnetDirector").val();
+                    var mat_datos = {carnetIdentidad: carnetIdentidadDirector};
+
+                    $('#modalBuscarDirector').modal('hide');
+
+                    $(".preload").removeClass('hidden');
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: "html",
+                        url: '{{ path("localizarDirector") }}',
+                        data: mat_datos
+                    }).done(function (data) {
+                        $(".preload").addClass('hidden');
+
+                        if (data === '404') {
+                            alertify.alert('<strong>El carnet de identidad no está registrado.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                .set('label', 'Aceptar')
+                                .set('onok', function () {
+                                    $('#modalBuscarDirector input').each(function () {
+                                        $(this).val('');
+                                    });
+                                });
+                        } else {
+                            $('#editNombreDirector').val(data);
+                        }
+
+                    });
+
+                }
+            });
+
+            //Formulario Buscar Productor
+            $('#btnEditProductor').on('click', function () {
+                $('#carnetProductor').val('');
+                $('#modalBuscarProductor').modal('show');
+            });
+
+            $('#carnetProductor').on("keyup", function () {
+
+                if ($('#carnetProductor').val().trim().length === 11) {
+                    $('#btnBuscarProductor').prop("disabled", false);
+                } else {
+                    $('#btnBuscarProductor').prop("disabled", true);
+                }
+            });
+
+            $('#btnBuscarProductor').on('click', function () {
+                if ($("#carnetProductor").val() !== '') {
+
+                    $('#editNombreProductor').val('');
+                    carnetIdentidadProductor = $("#carnetProductor").val();
+                    var mat_datos = {carnetIdentidad: carnetIdentidadProductor};
+
+                    $('#modalBuscarProductor').modal('hide');
+
+                    $(".preload").removeClass('hidden');
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: "html",
+                        url: '{{ path("localizarDirector") }}',
+                        data: mat_datos
+                    }).done(function (data) {
+                        $(".preload").addClass('hidden');
+
+                        if (data === '404') {
+                            alertify.alert('<strong>El carnet de identidad no está registrado.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                .set('label', 'Aceptar')
+                                .set('onok', function () {
+                                    $('#modalBuscarProductor input').each(function () {
+                                        $(this).val('');
+                                    });
+                                });
+                        } else {
+                            $('#editNombreProductor').val(data);
+                        }
+
+                    });
+
+                }
+            });
+
+            //Formulario Buscar Persona contratada
+            $('#btnAddPersonaPA').on('click', function () {
+                $('#carnetPersona').val('');
+                $('#modalBuscarPersona').modal('show');
+            });
+
+            $('#carnetPersona').on("keyup", function () {
+
+                if ($('#carnetPersona').val().trim().length === 11) {
+                    $('#btnBuscarPersona').prop("disabled", false);
+                } else {
+                    $('#btnBuscarPersona').prop("disabled", true);
+                }
+            });
+
+            $('#btnBuscarPersona').on('click', function () {
+                if ($("#carnetPersona").val() !== '') {
+
+                    $('#addNombrePA').val('');
+                    carnetIdentidad = $("#carnetPersona").val();
+                    var mat_datos = {carnetIdentidad: carnetIdentidad};
+
+                    $('#modalBuscarPersona').modal('hide');
+
+                    $(".preload").removeClass('hidden');
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: '{{ path("localizarPersonaConceptos") }}',
+                        data: mat_datos
+                    }).done(function (data) {
+                        $(".preload").addClass('hidden');
+
+                        var obj = JSON.parse(data);
+                        var nombre = obj['nombre'];
+                        var cargo = obj['cargo'];
+
+                        if (nombre.length === 0) {
+                            alertify.alert('<strong>El carnet de identidad no está registrado.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                .set('label', 'Aceptar')
+                                .set('onok', function () {
+                                    $('#addConcepto').prop("disabled", true).val(0);
+                                    $('#addPresupuestoCargoPA').prop("disabled", true).val('');
+                                    $('#addPresupuestoOtroIngresoPA').prop("disabled", true).val('');
+                                    $('#btnAddPersonaContratadaPA').prop("disabled", true).val('');
+                                    $('#modalBuscarPersona input').each(function () {
+                                        $(this).val('');
+                                    });
+                                });
+                        } else if (cargo.length === 0) {
+                            alertify.alert('<strong>Esta persona no tiene conceptos registrados como personal artístico.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                .set('label', 'Aceptar')
+                                .set('onok', function () {
+                                    $('#addConcepto').prop("disabled", true).val(0);
+                                    $('#addPresupuestoCargoPA').prop("disabled", true).val('');
+                                    $('#addPresupuestoOtroIngresoPA').prop("disabled", true).val('');
+                                    $('#btnAddPersonaContratadaPA').prop("disabled", true).val('');
+                                    $('#modalBuscarPersona input').each(function () {
+                                        $(this).val('');
+                                    });
+                                });
+
+                        } else {
+                            //Nombre completo
+                            var nombreCompleto = nombre[0]['nombre'] + ' ' + nombre[0]['primerApellido'] + ' ' + nombre[0]['segundoApellido'];
+                            $('#addNombrePA').val(nombreCompleto);
+                            //Cargos
+                            var html = '';
+                            var n;
+                            $("option").remove('.cambioCentroCosto');
+                            $("#inicio").after('<option class="cambioCentroCosto"></option>');
+
+                            for (n = 0; n < cargo.length; n++) {
+                                var id = cargo[n]['id'];
+                                var name = cargo[n]['nombre'];
+                                html += '<option class="cambioCentroCosto" value="' + id + '">' + name + '</option>';
+                            }
+                            $(".cambioCentroCosto").replaceWith(html);
+                            //Habilitar
+                            $('#addConcepto').prop("disabled", false).val(0);
+                            $('#addPresupuestoCargoPA').prop("disabled", true).val('');
+                            $('#addPresupuestoOtroIngresoPA').prop("disabled", true).val('');
+                            $('#btnAddPersonaContratadaPA').prop("disabled", true).val('');
+                        }
+
+                    });
+
+                }
+            });
+
+            $('#addConcepto').on("change", function () {
+                if ($('#addConcepto').val() === '' || $('#addConcepto').val() === '0') {
+                    $('#addPresupuestoCargoPA').val('');
+                    $('#addPresupuestoOtroIngresoPA').val('');
+                    $('#addPresupuestoCargoPA').prop("disabled", true);
+                } else {
+                    $('#addPresupuestoCargoPA').val('');
+                    $('#addPresupuestoOtroIngresoPA').val('');
+                    $('#addPresupuestoCargoPA').prop("disabled", false);
+                }
+            });
+
+            $('#addPresupuestoCargoPA').on("keyup", function () {
+                if ($('#addPresupuestoCargoPA').val() === '') {
+                    $('#addPresupuestoOtroIngresoPA').val('');
+                    $('#addPresupuestoOtroIngresoPA').prop("disabled", true);
+                } else {
+                    $('#addPresupuestoOtroIngresoPA').prop("disabled", false);
+                }
+            });
+
+            $('#addPresupuestoOtroIngresoPA').on("keyup", function () {
+                if ($('#addPresupuestoOtroIngresoPA').val() === '') {
+                    $('#btnAddPersonaContratadaPA').prop("disabled", true);
+                } else {
+                    $('#btnAddPersonaContratadaPA').prop("disabled", false);
+                }
+            });
+
+            var contratados = [];
+            var valorPrograma;
+            var contratosPA = [];
+            var i = 0;
+
+            $('#btnAddPersonaContratadaPA').on('click', function () {
+                var nombre = $("#addNombrePA").val();
+                var idCargoSeleccionado = $("#addConcepto").val();
+                var presupuestoCargo = $("#addPresupuestoCargoPA").val();
+                var presupuestoOtroIngreso = $("#addPresupuestoOtroIngresoPA").val();
+                var totalPagar = parseFloat($("#addPresupuestoCargoPA").val()) + parseFloat($("#addPresupuestoOtroIngresoPA").val());
+                valorPrograma = 0;
+                if ($("#editEmisiones").val() !== '') {
+                    valorPrograma = totalPagar / parseInt($("#editEmisiones").val());
+                }
+
+                {% for cargo in  cargos %}
+                var idCargo = '{{ cargo.id }}';
+
+                if (idCargo === idCargoSeleccionado) {
+                    var concepto = '{{ cargo.nombre }}';
+                }
+                {% endfor %}
+
+                //Comprobar que este contrato no este en la tabla
+                var noExiste = true;
+                var mismoPA = false;
+                contratosPA = [];
+                var filaNoContrato;
+                $("#dataPA tbody tr").each(function (index) {
+                    var filaCI, filaConcepto;
+                    $(this).children("td").each(function (index2) {
+                        switch (index2) {
+                            case 0:
+                                filaNoContrato = $(this).text();
+                                break;
+                            case 1:
+                                filaCI = $(this).text();
+                                break;
+                            case 3:
+                                filaConcepto = $(this).text();
+                                break;
+                        }
+                    });
+                    {% for cargo in  cargos %}
+                        var cargo = '{{ cargo.nombre }}';
+                        if (cargo === filaConcepto) {
+                            var idConcepto = {{ cargo.id }};
+                        }
+                    {% endfor %}
+                    //Aqui ya tenemos los valores de la fila
+                    if (filaCI === carnetIdentidad && filaConcepto === concepto) {
+                        noExiste = false;
+                        alertify.alert('<strong>Este contrato ya existe, no se puede registrar.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }else if (filaCI === carnetIdentidad && idConcepto !== 1 && idConcepto !== 5 && idConcepto !== 25) {
+                        mismoPA = true;
+                        i = filaNoContrato;
+                    }
+                });
+
+                if (table.rows().count() !== 0) {
+                    if (!mismoPA) {
+                        contratosPA.push(parseInt(filaNoContrato));
+                        i = Math.max.apply(null, contratosPA);
+                    }
+                } else {
+                    i = 0;
+                }
+
+                if (noExiste) {
+                    if (!mismoPA) {
+                        i++;
+                    }
+                    contratosPA.push(parseInt(i));
+                    //Adicionar la fila en el dataTable de personas
+                    table.row.add([
+                        i,
+                        carnetIdentidad,
+                        nombre,
+                        concepto,
+                        Highcharts.numberFormat(presupuestoCargo, 2, '.', ','),
+                        Highcharts.numberFormat(presupuestoOtroIngreso, 2, '.', ','),
+                        Highcharts.numberFormat(totalPagar, 2, '.', ','),
+                        Highcharts.numberFormat(valorPrograma, 2, '.', ',')
+                    ]).draw(false);
+                }
+
+            });
+
+            //Borrar la fila de un dataTable
+            $('#dataPA tbody').on('click', '.borrarContratoPA', function () {
+                table
+                    .row($(this).parents('tr'))
+                    .remove()
+                    .draw();
+            });
+
+            //Formulario Buscar Persona TCP
+            $('#btnAddPersonaTCP').on('click', function () {
+                $('#carnetPersonaTCP').val('');
+                $('#modalBuscarPersonaTCP').modal('show');
+            });
+
+            $('#carnetPersonaTCP').on("keyup", function () {
+
+                if ($('#carnetPersonaTCP').val().trim().length === 11) {
+                    $('#btnBuscarPersonaTCP').prop("disabled", false);
+                } else {
+                    $('#btnBuscarPersonaTCP').prop("disabled", true);
+                }
+            });
+
+            $('#btnBuscarPersonaTCP').on('click', function () {
+                if ($("#carnetPersonaTCP").val() !== '') {
+
+                    $('#addNombreTCP').val('');
+                    carnetIdentidadTCP = $("#carnetPersonaTCP").val();
+                    var mat_datos = {carnetIdentidad: carnetIdentidadTCP};
+
+                    $('#modalBuscarPersonaTCP').modal('hide');
+
+                    $(".preload").removeClass('hidden');
+
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        url: '{{ path("localizarPersonaServicios") }}',
+                        data: mat_datos
+                    }).done(function (data) {
+                        $(".preload").addClass('hidden');
+
+                        var obj = JSON.parse(data);
+                        var nombre = obj['nombre'];
+                        var cargo = obj['cargo'];
+
+                        if (nombre.length === 0) {
+                            alertify.alert('<strong>El carnet de identidad no está registrado.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                .set('label', 'Aceptar')
+                                .set('onok', function () {
+                                    $('#addServicio').prop("disabled", true);
+                                    $('#addPresupuestoCargoTCP').prop("disabled", true);
+                                    $('#addPresupuestoOtroIngresoTCP').prop("disabled", true);
+                                    $('#btnAddPersonaContratadaTCP').prop("disabled", true);
+                                    $('#modalBuscarPersonaTCP input').each(function () {
+                                        $(this).val('');
+                                    });
+                                });
+                        } else if (cargo.length === 0) {
+                            alertify.alert('<strong>Esta persona no tiene servicios registrados como trabajador por cuenta propia.</strong>')
+                                .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                    '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Confirmación</h4>')
+                                .set('label', 'Aceptar')
+                                .set('onok', function () {
+                                    $('#addServicio').prop("disabled", true);
+                                    $('#addPresupuestoCargoTCP').prop("disabled", true);
+                                    $('#addPresupuestoOtroIngresoTCP').prop("disabled", true);
+                                    $('#btnAddPersonaContratadaTCP').prop("disabled", true);
+                                    $('#modalBuscarPersonaTCP input').each(function () {
+                                        $(this).val('');
+                                    });
+                                });
+
+                        } else {
+                            //Nombre completo
+                            var nombreCompleto = nombre[0]['nombre'] + ' ' + nombre[0]['primerApellido'] + ' ' + nombre[0]['segundoApellido'];
+                            $('#addNombreTCP').val(nombreCompleto);
+                            //Cargos
+                            var html = '';
+                            var n;
+                            $("option").remove('.cambioCentroCosto2');
+                            $("#inicio2").after('<option class="cambioCentroCosto2"></option>');
+
+                            for (n = 0; n < cargo.length; n++) {
+                                var id = cargo[n]['id'];
+                                var name = cargo[n]['nombre'];
+                                html += '<option class="cambioCentroCosto2" value="' + id + '">' + name + '</option>';
+                            }
+                            $(".cambioCentroCosto2").replaceWith(html);
+                            //Habilitar
+                            $('#addServicio').prop("disabled", false);
+                            $('#addPresupuestoCargoTCP').prop("disabled", true);
+                            $('#addPresupuestoOtroIngresoTCP').prop("disabled", true);
+                            $('#btnAddPersonaContratadaTCP').prop("disabled", true);
+                        }
+
+                    });
+
+                }
+            });
+
+            $('#addServicio').on("change", function () {
+                if ($('#addServicio').val() === '' || $('#addServicio').val() === '0') {
+                    $('#addPresupuestoCargoTCP').prop("disabled", true);
+                } else {
+                    $('#addPresupuestoCargoTCP').prop("disabled", false);
+                }
+            });
+
+            $('#addPresupuestoCargoTCP').on("keyup", function () {
+                if ($('#addPresupuestoCargoTCP').val() === '') {
+                    $('#addPresupuestoOtroIngresoTCP').prop("disabled", true);
+                    $('#btnAddPersonaContratadaTCP').prop("disabled", true);
+                } else {
+                    $('#addPresupuestoOtroIngresoTCP').prop("disabled", false);
+                    $('#btnAddPersonaContratadaTCP').prop("disabled", false);
+                }
+            });
+
+            var valorProgramaTCP;
+            var k = 0;
+            var noContratoTCP;
+            var contratos = [];
+
+            $('#btnAddPersonaContratadaTCP').on('click', function () {
+
+                var nombre = $("#addNombreTCP").val();
+                var idCargoSeleccionado = $("#addServicio").val();
+                var presupuestoCargo = $("#addPresupuestoCargoTCP").val();
+                var totalPagar = parseFloat($("#addPresupuestoCargoTCP").val());
+                valorProgramaTCP = 0;
+                if ($("#editEmisiones").val() !== '') {
+                    valorProgramaTCP = totalPagar / parseInt($("#editEmisiones").val());
+                }
+
+                {% for cargo in  cargos %}
+                var idCargo = '{{ cargo.id }}';
+
+                if (idCargo === idCargoSeleccionado) {
+                    var servicio = '{{ cargo.nombre }}';
+                }
+                {% endfor %}
+
+                //Comprobar que este contrato no este en la tabla
+                var noExisteTCP = true;
+                var mismoTCP = false;
+                contratos = [];
+                var filaNoContrato;
+                $("#dataTCP tbody tr").each(function (index) {
+                    var filaCI, filaConcepto;
+                    $(this).children("td").each(function (index2) {
+                        switch (index2) {
+                            case 0:
+                                filaNoContrato = $(this).text();
+                                break;
+                            case 1:
+                                filaCI = $(this).text();
+                                break;
+                            case 3:
+                                filaConcepto = $(this).text();
+                                break;
+                        }
+                    });
+                    //Aqui ya tenemos los valores de la fila
+                    if (filaCI === carnetIdentidadTCP && filaConcepto === servicio) {
+                        noExisteTCP = false;
+                        alertify.alert('<strong>Este contrato ya existe, no se puede registrar.</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Advertencia</h4>')
+                            .set('label', 'Aceptar');
+                        return false;
+                    }else if (filaCI === carnetIdentidadTCP) {
+                        mismoTCP = true;
+                        noContratoTCP = filaNoContrato;
+                    }
+                });
+
+                if (tableTCP.rows().count() !== 0) {
+                    var posicion = filaNoContrato.indexOf('-');
+                    contratos.push(parseInt(filaNoContrato.substr(0, posicion)));
+                    k = Math.max.apply(null, contratos);
+                } else {
+                    k = 0;
+                }
+
+                if (noExisteTCP) {
+                    if (!mismoTCP) {
+                        k++;
+                        noContratoTCP = k + '-TCP';
+                    }
+                    var posicion = noContratoTCP.indexOf('-');
+                    contratos.push(parseInt(noContratoTCP.substr(0, posicion)));
+                    //Adicionar la fila en el dataTable de personas
+                    tableTCP.row.add([
+                        noContratoTCP,
+                        carnetIdentidadTCP,
+                        nombre,
+                        servicio,
+                        Highcharts.numberFormat(presupuestoCargo, 2, '.', ','),
+                        Highcharts.numberFormat(totalPagar, 2, '.', ','),
+                        Highcharts.numberFormat(valorProgramaTCP, 2, '.', ',')
+                    ]).draw(false);
+                }
+
+            });
+
+            //Borrar la fila de un dataTable
+            $('#dataTCP tbody').on('click', '.borrarContratoTCP', function () {
+                tableTCP
+                    .row($(this).parents('tr'))
+                    .remove()
+                    .draw();
+            });
+
+
+            $('#btnGuardar').on('click', function () {
+
+                //Validaciones
+                if ($("#editContratoCanal").val() === '') {
+                    alertify.alert('<strong>El no. de contrato del canal es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editNombreDirector").val() === '') {
+                    alertify.alert('<strong>El nombre del director es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editNombreProductor").val() === '') {
+                    alertify.alert('<strong>El nombre del productor es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editTitulo").val() === '') {
+                    alertify.alert('<strong>El título del proyecto es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editEmisiones").val() === '' || $("#addEmisiones").val() === '0') {
+                    alertify.alert('<strong>La cantidad de emisiones es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editTiempoPantalla").val() === '' || $("#addTiempoPantalla").val() === '0') {
+                    alertify.alert('<strong>El tiempo en pantalla es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editTipoProyecto").val() === '0') {
+                    alertify.alert('<strong>La categoría es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editFechaInicio").val() === '') {
+                    alertify.alert('<strong>La fecha de inicio es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editFechaFinal").val() === '') {
+                    alertify.alert('<strong>La fecha de terminación es obligatoria, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editPreFilmacion").val() === '') {
+                    alertify.alert('<strong>La cantidad de días de la etapa de pre-filmación es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editFilmacion").val() === '') {
+                    alertify.alert('<strong>La cantidad de días de la etapa de filmación es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                if ($("#editPostFilmacion").val() === '') {
+                    alertify.alert('<strong>La cantidad de días de la etapa de post-filmación es obligatorio, no puede quedar en blanco.</strong>')
+                        .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                            '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                        .set('label', 'Aceptar');
+                    return false;
+                }
+
+                const cad = '.';
+
+                contratados = [];
+                //Personal artistico
+                if (table.rows().count() !== 0) {
+                    $("#dataPA tbody tr").each(function (index) {
+                        var filaCI, filaNoContrato, filaConcepto, filaPresupuestoCargo, filaPresupuestoOtroIngreso,
+                            filaTotalPagar, filaValorPrograma;
+                        $(this).children("td").each(function (index2) {
+                            switch (index2) {
+                                case 0:
+                                    filaNoContrato = $(this).text();
+                                    break;
+                                case 1:
+                                    filaCI = $(this).text();
+                                    break;
+                                case 3:
+                                    filaConcepto = $(this).text();
+                                    break;
+                                case 4:
+                                    filaPresupuestoCargo = $(this).text();
+                                    break;
+                                case 5:
+                                    filaPresupuestoOtroIngreso = $(this).text();
+                                    break;
+                                case 6:
+                                    filaTotalPagar = $(this).text();
+                                    break;
+                                case 7:
+                                    filaValorPrograma = $(this).text();
+                                    break;
+                            }
+                        });
+                        //Aqui ya tenemos los valores de la fila
+                        contratados.push({
+                            carnetIdentidad: filaCI,
+                            noContrato: filaNoContrato,
+                            concepto: filaConcepto,
+                            presupuestoCargo: filaPresupuestoCargo,
+                            presupuestoOtroIngreso: filaPresupuestoOtroIngreso,
+                            totalPagar: filaTotalPagar,
+                            valorPrograma: filaValorPrograma,
+                            isPA: 1,
+                            isTCP: 0
+                        });
+                    });
+                }
+
+                //Trabajadores por cuenta propia
+                if (tableTCP.rows().count() !== 0) {
+                    $("#dataTCP tbody tr").each(function (index) {
+                        var filaCI, filaNoContrato, filaServicio, filaPresupuestoCargo, filaTotalPagar,
+                            filaValorPrograma;
+                        $(this).children("td").each(function (index2) {
+                            switch (index2) {
+                                case 0:
+                                    filaNoContrato = $(this).text();
+                                    break;
+                                case 1:
+                                    filaCI = $(this).text();
+                                    break;
+                                case 3:
+                                    filaServicio = $(this).text();
+                                    break;
+                                case 4:
+                                    filaPresupuestoCargo = $(this).text();
+                                    break;
+                                case 5:
+                                    filaTotalPagar = $(this).text();
+                                    break;
+                                case 6:
+                                    filaValorPrograma = $(this).text();
+                                    break;
+                            }
+                        });
+                        //Aqui ya tenemos los valores de la fila
+                        contratados.push({
+                            carnetIdentidad: filaCI,
+                            noContrato: filaNoContrato,
+                            concepto: filaServicio,
+                            presupuestoCargo: filaPresupuestoCargo,
+                            presupuestoOtroIngreso: 0,
+                            totalPagar: filaTotalPagar,
+                            valorPrograma: filaValorPrograma,
+                            isPA: 0,
+                            isTCP: 1
+                        });
+                    });
+                }
+
+                $(".preload").removeClass('hidden');
+
+                var mat_datos = {
+                    idProyecto: {{ proyecto.id }},
+                    noContratoCanal: $("#editContratoCanal").val(),
+                    nombreDirector: $("#editNombreDirector").val(),
+                    nombreProductor: $("#editNombreProductor").val(),
+                    titulo: $("#editTitulo").val(),
+                    formato: $("#editFormatoProyecto").val(),
+                    cantEmisiones: $("#editEmisiones").val(),
+                    tiempoPantalla: $("#editTiempoPantalla").val(),
+                    categoria: $("#editTipoProyecto").val(),
+                    fechaInicio: $("#editFechaInicio").val(),
+                    fechaFinal: $("#editFechaFinal").val(),
+                    preFilmacion: $("#editPreFilmacion").val(),
+                    filmacion: $("#editFilmacion").val(),
+                    postFilmacion: $("#editPostFilmacion").val(),
+                    descripcion: $("#editDescripcion").val(),
+                    contratados: contratados
+                };
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "html",
+                    url: '{{ path("updateProyecto") }}',
+                    data: mat_datos
+                }).done(function (data) {
+
+                    $(".preload").addClass('hidden');
+
+                    if (data === 'ok') {
+
+                        alertify.alert('<strong>El proyecto ha sido modificado correctamente</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ok-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px; color: white">Confirmación</h4>')
+                            .set('label', 'Aceptar')
+                            .set('onok', function () {
+                                window.location.href = "{{ path('gestionarProyectos') }}";
+                            });
+                    } else {
+                        alertify.alert('<strong>' + data + '</strong>')
+                            .setHeader('<span class="glyphicon glyphicon-ban-circle" style="font-size: 20px"></span>' +
+                                '<h4 class="modal-title" style="display: inline-block; margin-left: 10px">Error</h4>')
+                            .set('label', 'Aceptar')
+                    }
+                });
+
+            });
+
+        });
+    </script>
+{% endblock %}
+

@@ -1,0 +1,246 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Reporte
+ *
+ * @ORM\Table(name="reporte")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ReporteRepository")
+ */
+class Reporte
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="noReporte", type="integer")
+     */
+    private $noReporte;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="fechaReporte", type="date")
+     */
+    private $fechaReporte;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cantidadProgramas", type="integer")
+     */
+    private $cantidadProgramas;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="isConcluido", type="boolean",nullable=true)
+     */
+    private $isConcluido = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Proyecto",inversedBy="reportes")
+     */
+    protected $proyecto;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProyectoPersonaReporte", mappedBy="reporte")
+     */
+    private $proyectosPersonasReportes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="ProyectoEmpresaReporte", mappedBy="reporte")
+     */
+    private $proyectosEmpresasReportes;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->proyectosPersonasReportes = new ArrayCollection();
+        $this->proyectosEmpresasReportes = new ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set fechaReporte
+     *
+     * @param \DateTime $fechaReporte
+     *
+     * @return Reporte
+     */
+    public function setFechaReporte($fechaReporte)
+    {
+        $this->fechaReporte = $fechaReporte;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaReporte
+     *
+     * @return \DateTime
+     */
+    public function getFechaReporte()
+    {
+        return $this->fechaReporte;
+    }
+
+    /**
+     * Set cantidadProgramas
+     *
+     * @param integer $cantidadProgramas
+     *
+     * @return Reporte
+     */
+    public function setCantidadProgramas($cantidadProgramas)
+    {
+        $this->cantidadProgramas = $cantidadProgramas;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadProgramas
+     *
+     * @return integer
+     */
+    public function getCantidadProgramas()
+    {
+        return $this->cantidadProgramas;
+    }
+
+    /**
+     * Add proyectosPersonasReporte
+     *
+     * @param \AppBundle\Entity\ProyectoPersonaReporte $proyectosPersonasReporte
+     *
+     * @return Reporte
+     */
+    public function addProyectosPersonasReporte(\AppBundle\Entity\ProyectoPersonaReporte $proyectosPersonasReporte)
+    {
+        $this->proyectosPersonasReportes[] = $proyectosPersonasReporte;
+
+        return $this;
+    }
+
+    /**
+     * Remove proyectosPersonasReporte
+     *
+     * @param \AppBundle\Entity\ProyectoPersonaReporte $proyectosPersonasReporte
+     */
+    public function removeProyectosPersonasReporte(\AppBundle\Entity\ProyectoPersonaReporte $proyectosPersonasReporte)
+    {
+        $this->proyectosPersonasReportes->removeElement($proyectosPersonasReporte);
+    }
+
+    /**
+     * Get proyectosPersonasReportes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProyectosPersonasReportes()
+    {
+        return $this->proyectosPersonasReportes;
+    }
+
+    /**
+     * Set proyecto
+     *
+     * @param \AppBundle\Entity\Proyecto $proyecto
+     *
+     * @return Reporte
+     */
+    public function setProyecto(\AppBundle\Entity\Proyecto $proyecto = null)
+    {
+        $this->proyecto = $proyecto;
+
+        return $this;
+    }
+
+    /**
+     * Get proyecto
+     *
+     * @return \AppBundle\Entity\Proyecto
+     */
+    public function getProyecto()
+    {
+        return $this->proyecto;
+    }
+
+
+    /**
+     * Set noReporte
+     *
+     * @param integer $noReporte
+     *
+     * @return Reporte
+     */
+    public function setNoReporte($noReporte)
+    {
+        $this->noReporte = $noReporte;
+
+        return $this;
+    }
+
+    /**
+     * Get noReporte
+     *
+     * @return integer
+     */
+    public function getNoReporte()
+    {
+        return $this->noReporte;
+    }
+
+    public function cantidadParticipantes()
+    {
+        return count($this->proyectosPersonasReportes);
+    }
+
+    /**
+     * Set isConcluido
+     *
+     * @param boolean $isConcluido
+     *
+     * @return Reporte
+     */
+    public function setIsConcluido($isConcluido)
+    {
+        $this->isConcluido = $isConcluido;
+
+        return $this;
+    }
+
+    /**
+     * Get isConcluido
+     *
+     * @return boolean
+     */
+    public function getIsConcluido()
+    {
+        return $this->isConcluido;
+    }
+}

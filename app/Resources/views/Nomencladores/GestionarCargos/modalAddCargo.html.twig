@@ -1,0 +1,65 @@
+<div id="modalAddCargo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+     aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-" role="document" style="max-width: 40vw">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-default text-uppercase">AGREGAR CONCEPTO</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-12 pr-1">
+                        <label for="addNombre">Nombre</label>
+                        <input type="text" class="form-control"
+                               placeholder="Teclee un nombre" id="addNombre"
+                               name="addNombre">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-12 pr-1">
+                        <div class="form-group">
+                            <label for="addFuncion">Función</label><textarea rows="9"
+                                                                             class="form-control textarea"
+                                                                             id="addFuncion"
+                                                                             name="addFuncion"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-12 pr-1">
+                        <div class="form-group">
+                            <label for="addTipoContrato">Tipo de Contrato</label>
+                            <select class="form-control" id="addTipoContrato"
+                                    name="addTipoContrato">
+                                <option value="0">Seleccione ...</option>
+                                {% for tipo in  tiposContratos %}
+                                    <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-12 pr-1" style="padding-top: 20px">
+                        <div class="md-checkbox">
+                            <input type="checkbox" id="addServicio" class="md-check">
+                            <label for="addServicio">
+                                <span></span>
+                                <span class="check"></span>
+                                <span class="box"></span>
+                                Servicio </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="update ml-auto mr-auto">
+                    <button type="button" class="btn btn-primary" id="btnAddGuardar">Guardar</button>
+                    <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
